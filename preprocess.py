@@ -472,64 +472,67 @@ class DataPreprocessor:
 
 
 
-# --- Chuẩn bị dữ liệu mẫu ---
-data = {
-    'ngay_mua': ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-10'],
-    'doanh_thu': [100, 110, np.nan, 105, 5000], # 5000 là outlier
-    'chi_phi': [50, 55, 60, 52, 65],
-    'thanh_pho': ['Hà Nội', 'TP.HCM', 'Đà Nẵng', 'Hà Nội', 'TP.HCM'],
-    'xep_hang': ['Tốt', 'Rất Tốt', 'Tốt', 'Khá', np.nan] # 'NaN' là missing
-}
-sample_df = pd.DataFrame(data)
+# ---------------------------------VÍ DỤ CÁCH DÙNG----------------------------
+if __name__ == "__main__":
+    # --- Chuẩn bị dữ liệu mẫu ---
+    data = {
+        'ngay_mua': ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-10'],
+        'doanh_thu': [100, 110, np.nan, 105, 5000], # 5000 là outlier
+        'chi_phi': [50, 55, 60, 52, 65],
+        'thanh_pho': ['Hà Nội', 'TP.HCM', 'Đà Nẵng', 'Hà Nội', 'TP.HCM'],
+        'xep_hang': ['Tốt', 'Rất Tốt', 'Tốt', 'Khá', np.nan] # 'NaN' là missing
+    }
+    sample_df = pd.DataFrame(data)
 
-# --- 1. Khởi tạo đối tượng ---
-# Bạn có thể khởi tạo bằng DataFrame...
-processor = DataPreprocessor(sample_df)
+    # --- 1. Khởi tạo đối tượng ---
+    # Bạn có thể khởi tạo bằng DataFrame...
+    processor = DataPreprocessor(sample_df)
 
-# ...hoặc tải từ file (ví dụ nếu bạn đã lưu sample_df.to_csv('sample.csv'))
-# processor = DataPreprocessor.from_file('sample.csv')
+    # ...hoặc tải từ file (ví dụ nếu bạn đã lưu sample_df.to_csv('sample.csv'))
+    # processor = DataPreprocessor.from_file('sample.csv')
 
-print("--- Dữ liệu gốc ---")
-print(processor.get_processed_data())
-print(processor) # Sử dụng __repr__
+    print("--- Dữ liệu gốc ---")
+    print(processor.get_processed_data())
+    print(processor) # Sử dụng __repr__
 
-# --- 2. Xử lý dữ liệu thiếu (Missing Values) ---
-# Tự động điền 'mean' cho 'doanh_thu' và 'mode' cho 'xep_hang'
-processor.handle_missing_values(strategy='auto')
-print("\n--- Sau khi xử lý NaN (auto) ---")
-print(processor.get_processed_data())
+    # --- 2. Xử lý dữ liệu thiếu (Missing Values) ---
+    # Tự động điền 'mean' cho 'doanh_thu' và 'mode' cho 'xep_hang'
+    processor.handle_missing_values(strategy='auto')
+    print("\n--- Sau khi xử lý NaN (auto) ---")
+    print(processor.get_processed_data())
 
-# --- 3. Xử lý ngoại lai (Outliers) ---
-# Xóa các hàng có 'doanh_thu' ngoại lai bằng IQR
-processor.handle_outliers(method='iqr', action='remove', columns=['doanh_thu'])
-print("\n--- Sau khi xử lý Outlier (IQR) ---")
-print(processor.get_processed_data())
+    # --- 3. Xử lý ngoại lai (Outliers) ---
+    # Xóa các hàng có 'doanh_thu' ngoại lai bằng IQR
+    processor.handle_outliers(method='iqr', action='remove', columns=['doanh_thu'])
+    print("\n--- Sau khi xử lý Outlier (IQR) ---")
+    print(processor.get_processed_data())
 
-# --- 4. Trích xuất đặc trưng (Feature Engineering) ---
-# 4a. Xử lý Datetime
-processor.engineer_datetime_features('ngay_mua')
-print("\n--- Sau khi trích xuất Datetime ---")
-print(processor.get_processed_data().head())
+    # --- 4. Trích xuất đặc trưng (Feature Engineering) ---
+    # 4a. Xử lý Datetime
 
-# 4b. Xử lý Text tùy chỉnh (Custom Mapping)
-mapping = {'Khá': 1, 'Tốt': 2, 'Rất Tốt': 3}
-processor.apply_custom_mapping('xep_hang', mapping)
-print("\n--- Sau khi Mapping tùy chỉnh 'xep_hang' ---")
-print(processor.get_processed_data())
+    processor.engineer_datetime_features('ngay_mua')
+    print("\n--- Sau khi trích xuất Datetime ---")
+    print(processor.get_processed_data().head())
 
-# --- 5. Mã hóa biến phân loại (Encoding) ---
-# 'thanh_pho' là cột phân loại còn lại
-processor.encode_categorical(method='onehot', columns=['thanh_pho'])
-print("\n--- Sau khi Mã hóa One-Hot 'thanh_pho' ---")
-print(processor.get_processed_data())
+    # 4b. Xử lý Text tùy chỉnh (Custom Mapping)
+    mapping = {'Khá': 1, 'Tốt': 2, 'Rất Tốt': 3}
+    processor.apply_custom_mapping('xep_hang', mapping)
+    print("\n--- Sau khi Mapping tùy chỉnh 'xep_hang' ---")
+    print(processor.get_processed_data())
 
-# --- 6. Chuẩn hóa dữ liệu (Scaling) ---
-# Chuẩn hóa các cột số
-numeric_cols_to_scale = ['doanh_thu', 'chi_phi', 'xep_hang']
-processor.scale_features(method='standard', columns=numeric_cols_to_scale)
-print("\n--- Dữ liệu cuối cùng sau khi chuẩn hóa ---")
-print(processor.get_processed_data())
+    # --- 5. Mã hóa biến phân loại (Encoding) ---
+    # 'thanh_pho' là cột phân loại còn lại
+    processor.encode_categorical(method='onehot', columns=['thanh_pho'])
+    print("\n--- Sau khi Mã hóa One-Hot 'thanh_pho' ---")
+    print(processor.get_processed_data())
 
-# --- 7. Lấy DataFrame cuối cùng hoặc lưu ra file ---
-final_df = processor.get_processed_data()
-# processor.save_data('processed_data.csv')
+    # --- 6. Chuẩn hóa dữ liệu (Scaling) ---
+    # Chuẩn hóa các cột số
+    numeric_cols_to_scale = ['doanh_thu', 'chi_phi', 'xep_hang']
+    processor.scale_features(method='standard', columns=numeric_cols_to_scale)
+    print("\n--- Dữ liệu cuối cùng sau khi chuẩn hóa ---")
+    print(processor.get_processed_data())
+
+    # --- 7. Lấy DataFrame cuối cùng hoặc lưu ra file ---
+    final_df = processor.get_processed_data()
+    # processor.save_data('processed_data.csv')
