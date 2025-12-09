@@ -471,7 +471,7 @@ class DataPreprocessor:
             print(f"Lỗi khi xử lý cột datetime '{column}': {e}")
 
 
-
+# ---------------------------------VÍ DỤ CÁCH DÙNG----------------------------
 # --- Chuẩn bị dữ liệu mẫu ---
 data = {
     'ngay_mua': ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-10'],
@@ -507,6 +507,7 @@ print(processor.get_processed_data())
 
 # --- 4. Trích xuất đặc trưng (Feature Engineering) ---
 # 4a. Xử lý Datetime
+
 processor.engineer_datetime_features('ngay_mua')
 print("\n--- Sau khi trích xuất Datetime ---")
 print(processor.get_processed_data().head())
