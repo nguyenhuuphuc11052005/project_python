@@ -1,536 +1,576 @@
 import pandas as pd
 import numpy as np
-import os
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder
-from sklearn.ensemble import IsolationForest
+from abc import ABC, abstractmethod
 from scipy import stats
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from typing import List, Tuple, Optional, Dict, Union, Any
+from sklearn.preprocessing import OrdinalEncoder
+from sklearn.ensemble import IsolationForest
 
-class DataPreprocessor:
+# =============================================================================
+# 1. BASE CLASS (Lớp Trừu Tượng)
+# =============================================================================
+
+class BasePreprocessor(ABC):
     """
-    Một lớp Python toàn diện để thực hiện các bước tiền xử lý dữ liệu,
-    bao gồm đọc, làm sạch, chuẩn hóa, mã hóa và trích xuất đặc trưng.
-
-    Thuộc tính:
-        df (pd.DataFrame): DataFrame chứa dữ liệu đang được xử lý.
-        original_df (pd.DataFrame): Một bản sao của DataFrame gốc trước khi
-                                    thực hiện bất kỳ thay đổi nào.
+    Lớp cơ sở trừu tượng (Abstract Base Class) cho tất cả các bộ xử lý dữ liệu.
+    
+    Lớp này định nghĩa giao diện chung (interface) và các phương thức tiện ích
+    mà các lớp con (Imputer, Scaler, v.v.) cần tuân theo.
     """
 
-    def __init__(self, dataframe: pd.DataFrame = None):
-        """
-        Khởi tạo đối tượng DataPreprocessor.
-
-        Args:
-            dataframe (pd.DataFrame, optional): Một DataFrame để tải vào
-                                                bộ xử lý khi khởi tạo.
-        """
-        if dataframe is not None:
-            self.df = dataframe.copy()
-            self.original_df = dataframe.copy()
-        else:
-            self.df = None
-            self.original_df = None
+    def __init__(self) -> None:
+        """Khởi tạo các thuộc tính trạng thái cơ bản."""
+        self._is_fitted: bool = False
+        self._last_missing_count: int = 0
 
     def __repr__(self) -> str:
+        """Trả về chuỗi đại diện cho đối tượng."""
+        status = "Fitted" if self._is_fitted else "Unfitted"
+        return f"<{self.__class__.__name__} (Status: {status})>"
+
+    @abstractmethod
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Trả về một biểu diễn chuỗi của đối tượng, hiển thị trạng thái của DataFrame.
-        """
-        if self.df is None:
-            return "DataPreprocessor(Empty: Chưa có dữ liệu)"
+        Phương thức trừu tượng để xử lý dữ liệu.
         
-        shape = self.df.shape
-        cols = self.df.columns.tolist()
-        return f"DataPreprocessor(Shape: {shape}, Columns: {cols})"
-
-    # --- 1. Đọc và Ghi dữ liệu ---
-
-    @classmethod
-    def from_file(cls, filepath: str):
-        """
-        Một phương thức của lớp (@classmethod) để tạo một đối tượng
-        DataPreprocessor trực tiếp từ một đường dẫn file.
-
         Args:
-            filepath (str): Đường dẫn đến file (csv, xlsx, json).
-
-        Returns:
-            DataPreprocessor: Một đối tượng mới của lớp này với dữ liệu đã được tải.
-        """
-        instance = cls()
-        instance.load_data(filepath)
-        return instance
-
-    def load_data(self, filepath: str):
-        """
-        Đọc dữ liệu từ file (csv, xlsx, json) vào DataFrame của đối tượng.
-
-        Xử lý lỗi FileNotFoundError và các lỗi đọc file chung.
-
-        Args:
-            filepath (str): Đường dẫn đến file.
-        """
-        try:
-            _, extension = os.path.splitext(filepath)
+            df (pd.DataFrame): DataFrame đầu vào cần xử lý.
             
-            if extension == '.csv':
+        Returns:
+            pd.DataFrame: DataFrame sau khi đã được xử lý.
+        """
+        pass
+
+    @property
+    def missing_count(self) -> int:
+        """
+        Thuộc tính tính toán (Computed Property).
+        
+        Returns:
+            int: Tổng số lượng giá trị thiếu (NaN) trong DataFrame 
+                 tại lần xử lý gần nhất.
+        """
+        return self._last_missing_count
+
+    def _update_state(self, df: pd.DataFrame) -> None:
+        """
+        Cập nhật trạng thái nội bộ sau khi xử lý xong (Protected method).
+        
+        Args:
+            df (pd.DataFrame): DataFrame sau khi xử lý.
+        """
+        self._is_fitted = True
+        self._last_missing_count = int(df.isna().sum().sum())
+
+    @staticmethod
+    def get_column_types(df: pd.DataFrame) -> Tuple[List[str], List[str]]:
+        """
+        Phân loại các cột trong DataFrame thành nhóm số và nhóm phân loại.
+        
+        Args:
+            df (pd.DataFrame): DataFrame cần phân tích.
+            
+        Returns:
+            Tuple[List[str], List[str]]: 
+                - Danh sách tên các cột số (numeric).
+                - Danh sách tên các cột phân loại (categorical/object).
+        """
+        numeric = df.select_dtypes(include=np.number).columns.tolist()
+        categorical = df.select_dtypes(include=['object', 'category']).columns.tolist()
+        return numeric, categorical
+
+
+# =============================================================================
+# 2. CONCRETE CLASSES (Các Lớp Con Cụ Thể)
+# =============================================================================
+
+class Imputer(BasePreprocessor):
+    """
+    Lớp xử lý giá trị thiếu, hỗ trợ chọn cột cụ thể.
+    """
+    
+    def __init__(self, 
+                 strategy: str = 'mean', 
+                 fill_value: Optional[Any] = None, 
+                 columns: Optional[List[str]] = None) -> None:
+        """
+        Args:
+            strategy: 'mean', 'median', 'mode', 'constant', 'drop'.
+            fill_value: Giá trị điền khi strategy='constant'.
+            columns: Danh sách cột cần xử lý. Nếu None, tự động chọn tất cả phù hợp.
+        """
+        super().__init__()
+        self.strategy = strategy
+        self.fill_value = fill_value
+        self.columns = columns
+
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
+        df_processed = df.copy()
+        
+        # 1. Xác định cột mục tiêu
+        if self.columns:
+            # Nếu người dùng chỉ định cột, chỉ lấy các cột có trong DF
+            target_cols = [c for c in self.columns if c in df_processed.columns]
+        else:
+            # Logic tự động cũ
+            numeric_cols, _ = self.get_column_types(df_processed)
+            if self.strategy in ['mean', 'median']:
+                target_cols = numeric_cols
+            else:
+                target_cols = df_processed.columns.tolist()
+
+        try:
+            # 2. Xử lý
+            if self.strategy == 'constant':
+                if self.fill_value is None:
+                    raise ValueError("Cần fill_value cho strategy='constant'")
+                
+                # Chỉ điền cho các cột target
+                df_processed[target_cols] = df_processed[target_cols].fillna(self.fill_value)
+                
+            elif self.strategy == 'mode':
+                for col in target_cols:
+                    if not df_processed[col].mode().empty:
+                        df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+            
+            elif self.strategy == 'mean':
+                for col in target_cols:
+                    if not df_processed[col].mean().empty:
+                        df_processed[col] = df_processed[col].fillna(df_processed[col].mean()[0])
+
+            elif self.strategy == 'median':
+                for col in target_cols:
+                    if not df_processed[col].median().empty:
+                        df_processed[col] = df_processed[col].fillna(df_processed[col].median()[0])
+            
+            elif self.strategy == 'ffill':
+                # Forward fill: điền giá trị phía trước vào chỗ trống
+                df_processed[target_cols] = df_processed[target_cols].ffill()
+            print(f"[Imputer] Đã điền '{self.fill_value if self.strategy=='constant' else self.strategy}' vào các cột: {target_cols}")
+            self._update_state(df_processed)
+            return df_processed
+
+        except Exception as e:
+            print(f"Lỗi trong Imputer: {e}")
+            return df
+
+
+class Scaler(BasePreprocessor):
+    """
+    Lớp chuyên trách chuẩn hóa dữ liệu số (Normalization/Standardization).
+    """
+
+    def __init__(self, method: str = 'standard') -> None:
+        """
+        Khởi tạo bộ chuẩn hóa.
+
+        Args:
+            method (str): Phương pháp chuẩn hóa.
+                'standard': Sử dụng StandardScaler (z-score).
+                'minmax': Sử dụng MinMaxScaler (về khoảng [0, 1]).
+                Mặc định là 'standard'.
+        """
+        super().__init__()
+        self.method = method
+        self.scaler = StandardScaler() if method == 'standard' else MinMaxScaler()
+
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Thực hiện chuẩn hóa các cột số."""
+        df_processed = df.copy()
+        numeric_cols, _ = self.get_column_types(df_processed)
+        
+        if not numeric_cols:
+            print("[Scaler] Cảnh báo: Không có cột số nào để chuẩn hóa.")
+            return df_processed
+
+        try:
+            # Fit và Transform trên các cột số
+            # Lưu ý: scaler của sklearn sẽ trả về numpy array, cần gán lại vào DF
+            df_processed[numeric_cols] = self.scaler.fit_transform(df_processed[numeric_cols])
+            
+            print(f"[Scaler] Đã chuẩn hóa {len(numeric_cols)} cột bằng phương pháp '{self.method}'.")
+            self._update_state(df_processed)
+            return df_processed
+        except Exception as e:
+            print(f"Lỗi trong Scaler: {e}")
+            return df
+
+
+class OutlierHandler(BasePreprocessor):
+    """
+    Lớp chuyên trách phát hiện và xử lý dữ liệu ngoại lai (Outliers).
+    Hỗ trợ xử lý trên các cột chỉ định và nhiều phương pháp xử lý khác nhau.
+    """
+
+    def __init__(self, 
+                 method: str = 'iqr', 
+                 action: str = 'remove', 
+                 threshold: float = 1.5, 
+                 columns: Optional[List[str]] = None) -> None:
+        """
+        Khởi tạo bộ xử lý ngoại lai.
+
+        Args:
+            method (str): Phương pháp phát hiện ('iqr', 'zscore','isolation_forest').
+            action (str): Hành động xử lý ngoại lai.
+                'remove': Xóa các hàng chứa ngoại lai.
+                'cap': (Capping/Clipping) Thay thế ngoại lai bằng giá trị biên.
+                'set_nan': Thay thế ngoại lai bằng giá trị NaN (để Imputer xử lý).
+                Mặc định là 'remove'.
+            threshold (float): Ngưỡng xác định (1.5 cho IQR, 3.0 cho Z-score).
+            columns (Optional[List[str]]): Danh sách tên cột cụ thể cần xử lý. 
+                Nếu None, sẽ tự động áp dụng cho tất cả các cột số.
+        """
+        super().__init__()
+        self.method = method
+        self.action = action
+        self.threshold = threshold
+        self.columns = columns
+
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Thực hiện xử lý ngoại lai."""
+        df_processed = df.copy()
+        
+        # 1. Xác định các cột cần xử lý
+        numeric_cols, _ = self.get_column_types(df_processed)
+        
+        # Nếu người dùng chỉ định columns, lọc lấy giao của columns đó và numeric_cols
+        if self.columns:
+            # Kiểm tra xem cột người dùng nhập có tồn tại và là số không
+            target_cols = [c for c in self.columns if c in numeric_cols]
+            invalid_cols = set(self.columns) - set(target_cols)
+            if invalid_cols:
+                print(f"[OutlierHandler] Cảnh báo: Các cột sau không phải số hoặc không tồn tại: {invalid_cols}")
+        else:
+            target_cols = numeric_cols
+
+        if not target_cols:
+            print("[OutlierHandler] Không có cột số nào để xử lý.")
+            return df_processed
+
+        original_len = len(df_processed)
+        outlier_indices = set() # Dùng để lưu index các dòng cần xóa (nếu action='remove')
+
+        try:
+            if self.method == 'isolation_forest':
+                # Cần fillna tạm thời để model chạy được (Isolation Forest không nhận NaN)
+                temp_data = df_processed[target_cols].fillna(df_processed[target_cols].median())
+                
+                clf = IsolationForest(contamination=0.05, random_state=42)
+                preds = clf.fit_predict(temp_data) # -1 là outlier, 1 là normal
+                
+                # Lấy index của outlier
+                outlier_rows = df_processed.index[preds == -1]
+                
+                if self.action == 'remove':
+                    outlier_indices.update(outlier_rows)
+                elif self.action == 'set_nan':
+                    df_processed.loc[outlier_rows, target_cols] = np.nan
+                
+                print(f"[OutlierHandler] Isolation Forest tìm thấy {len(outlier_rows)} dòng ngoại lai.")
+            
+            else:
+                for col in target_cols:
+                    # Tính toán cận trên và cận dưới (Bounds)
+                    lower_bound, upper_bound = self._calculate_bounds(df_processed[col])
+                    
+                    # Logic xử lý dựa trên action
+                    if self.action == 'remove':
+                        # Tìm các index vi phạm
+                        outliers = df_processed[(df_processed[col] < lower_bound) | (df_processed[col] > upper_bound)].index
+                        outlier_indices.update(outliers)
+                    
+                    elif self.action == 'cap':
+                        # Thay thế giá trị < lower bằng lower, > upper bằng upper
+                        df_processed[col] = df_processed[col].clip(lower=lower_bound, upper=upper_bound)
+                    
+                    elif self.action == 'set_nan':
+                        # Thay thế giá trị ngoại lai bằng np.nan
+                        mask = (df_processed[col] < lower_bound) | (df_processed[col] > upper_bound)
+                        df_processed.loc[mask, col] = np.nan
+
+            # Thực hiện xóa hàng nếu action là 'remove'
+            if self.action == 'remove' and outlier_indices:
+                df_processed = df_processed.drop(index=list(outlier_indices))
+                print(f"[OutlierHandler] Đã xóa {len(outlier_indices)} dòng chứa ngoại lai.")
+            elif self.action == 'cap':
+                print(f"[OutlierHandler] Đã thay thế ngoại lai bằng biên (Capping) trên các cột: {target_cols}")
+            elif self.action == 'set_nan':
+                print(f"[OutlierHandler] Đã thay thế ngoại lai bằng NaN trên các cột: {target_cols}")
+
+            self._update_state(df_processed)
+            return df_processed
+
+        except Exception as e:
+            print(f"Lỗi trong OutlierHandler: {e}")
+            return df
+
+    def _calculate_bounds(self, series: pd.Series) -> tuple[float, float]:
+        """
+        Hàm hỗ trợ tính toán biên dưới và biên trên.
+        """
+        if self.method == 'iqr':
+            Q1 = series.quantile(0.25)
+            Q3 = series.quantile(0.75)
+            IQR = Q3 - Q1
+            lower = Q1 - self.threshold * IQR
+            upper = Q3 + self.threshold * IQR
+            return lower, upper
+            
+        elif self.method == 'zscore':
+            mean = series.mean()
+            std = series.std()
+            # Z = (X - mean) / std => X = Z * std + mean
+            lower = mean - self.threshold * std
+            upper = mean + self.threshold * std
+            return lower, upper
+        
+        else:
+            raise ValueError(f"Phương pháp '{self.method}' không hợp lệ.")
+
+
+
+
+class FeatureEngineer(BasePreprocessor):
+    """
+    Lớp chuyên trách tạo đặc trưng mới (Feature Engineering) và mã hóa dữ liệu.
+    Nâng cấp: Hỗ trợ Ordinal Encoding và One-Hot Encoding.
+    """
+
+    def __init__(self, 
+                 datetime_col: Optional[str] = None, 
+                 text_mapping: Optional[Dict[str, Dict[str, int]]] = None,
+                 ordinal_cols: Optional[Dict[str, List[str]]] = None,
+                 one_hot_cols: Optional[List[str]] = None) -> None:
+        """
+        Args:
+            datetime_col: Tên cột thời gian cần tách.
+            text_mapping: Mapping thủ công (như cũ).
+            ordinal_cols: Dictionary {tên_cột: [danh_sách_giá_trị_theo_thứ_tự_tăng_dần]}.
+                          Ví dụ: {'education': ['No HS', 'HS', 'Bachelors', ...]}
+            one_hot_cols: Danh sách các cột cần One-Hot Encoding.
+        """
+        super().__init__()
+        self.datetime_col = datetime_col
+        self.text_mapping = text_mapping
+        self.ordinal_cols = ordinal_cols
+        self.one_hot_cols = one_hot_cols
+        # Lưu lại encoder để có thể inverse_transform nếu cần (cho ordinal)
+        self._ordinal_encoders = {} 
+
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
+        df_processed = df.copy()
+        try:
+            # 1. Xử lý datetime (như cũ)
+            if self.datetime_col and self.datetime_col in df_processed.columns:
+                col = self.datetime_col
+                df_processed[col] = pd.to_datetime(df_processed[col], errors='coerce')
+                df_processed[f'{col}_year'] = df_processed[col].dt.year
+                df_processed[f'{col}_month'] = df_processed[col].dt.month
+                df_processed[f'{col}_day'] = df_processed[col].dt.day
+                df_processed.drop(columns=[col], inplace=True)
+                print(f"[FeatureEngineer] Đã tách ngày tháng cho cột '{col}'.")
+
+            # 2. Xử lý mapping text thủ công (như cũ)
+            if self.text_mapping:
+                for col, mapping in self.text_mapping.items():
+                    if col in df_processed.columns:
+                        df_processed[col] = df_processed[col].map(mapping).fillna(df_processed[col])
+                        print(f"[FeatureEngineer] Đã map giá trị thủ công cho cột '{col}'.")
+
+            # 3. Xử lý Ordinal Encoding (Mới)
+            if self.ordinal_cols:
+                df_processed = self._apply_ordinal_encoding(df_processed)
+
+            # 4. Xử lý One-Hot Encoding (Mới)
+            if self.one_hot_cols:
+                df_processed = self._apply_one_hot_encoding(df_processed)
+
+            self._update_state(df_processed)
+            return df_processed
+        except Exception as e:
+            print(f"Lỗi trong FeatureEngineer: {e}")
+            return df
+
+    def _apply_ordinal_encoding(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Mã hóa các biến có thứ tự."""
+        for col, categories in self.ordinal_cols.items():
+            if col in df.columns:
+                # Scikit-learn OrdinalEncoder cần input là 2D array
+                encoder = OrdinalEncoder(categories=[categories], handle_unknown='use_encoded_value', unknown_value=-1)
+                
+                # Fit và transform
+                encoded_data = encoder.fit_transform(df[[col]])
+                
+                # Cập nhật lại DataFrame (chuyển về 1D array)
+                df[col] = encoded_data.flatten()
+                
+                # Lưu encoder
+                self._ordinal_encoders[col] = encoder
+                print(f"[FeatureEngineer] Đã Ordinal Encode cột '{col}' với thứ tự: {categories}")
+            else:
+                print(f"[FeatureEngineer] Cảnh báo: Cột '{col}' không tìm thấy để Ordinal Encode.")
+        return df
+
+    def _apply_one_hot_encoding(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Mã hóa One-Hot cho các biến danh định."""
+        # Lọc các cột thực sự tồn tại
+        valid_cols = [c for c in self.one_hot_cols if c in df.columns]
+        
+        if valid_cols:
+            # Sử dụng pd.get_dummies cho đơn giản và hiệu quả với pandas DF
+            # drop_first=True để tránh đa cộng tuyến (Dummy Variable Trap)
+            df = pd.get_dummies(df, columns=valid_cols, dtype=int)
+            print(f"[FeatureEngineer] Đã One-Hot Encode các cột: {valid_cols}")
+        else:
+            print("[FeatureEngineer] Không tìm thấy cột nào để One-Hot Encode.")
+        return df
+
+
+# =============================================================================
+# 3. MANAGER CLASS (Lớp Quản Lý)
+# =============================================================================
+
+class DataManager:
+    """
+    Lớp quản lý dữ liệu, chấp nhận đầu vào là File Path hoặc DataFrame.
+    """
+    def __init__(self, input_data: Union[str, pd.DataFrame, None] = None) -> None:
+        self.df: Optional[pd.DataFrame] = None
+        self.filepath: Optional[str] = None
+
+        if input_data is not None:
+            if isinstance(input_data, str):
+                # Nếu là đường dẫn file string
+                self.filepath = input_data
+                self.load_data(input_data)
+            elif isinstance(input_data, pd.DataFrame):
+                # Nếu là DataFrame
+                self.df = input_data.copy()
+                print(f"--> [DataManager] Đã khởi tạo từ DataFrame có sẵn. Shape: {self.df.shape}")
+            else:
+                print("Lỗi: Đầu vào phải là đường dẫn file (str) hoặc DataFrame.")
+
+    def load_data(self, filepath: str) -> None:
+        try:
+            if filepath.endswith('.csv'):
                 self.df = pd.read_csv(filepath)
-            elif extension == '.xlsx':
+            elif filepath.endswith('.xlsx'):
                 self.df = pd.read_excel(filepath)
-            elif extension == '.json':
+            elif filepath.endswith('.json'):
                 self.df = pd.read_json(filepath)
             else:
-                raise ValueError(f"Định dạng file không được hỗ trợ: {extension}")
-            
-            self.original_df = self.df.copy()
-            print(f"Tải dữ liệu thành công từ: {filepath}")
-
-        except FileNotFoundError:
-            print(f"Lỗi: Không tìm thấy file tại '{filepath}'")
-            self.df = None
-            self.original_df = None
+                raise ValueError("Định dạng file không hỗ trợ.")
+            print(f"--> [DataManager] Đã tải dữ liệu từ file. Shape: {self.df.shape}")
         except Exception as e:
-            print(f"Lỗi khi đọc file: {e}")
-            self.df = None
-            self.original_df = None
+            print(f"Lỗi đọc file '{filepath}': {e}")
+            self.df = pd.DataFrame()
 
-    def save_data(self, filepath: str, index: bool = False):
-        """
-        Lưu DataFrame đã xử lý ra file mới.
+    def apply(self, preprocessor: BasePreprocessor) -> None:
+        if self.df is None or self.df.empty:
+            print("Cảnh báo: Không có dữ liệu để xử lý.")
+            return
 
-        Args:
-            filepath (str): Đường dẫn file đầu ra.
-            index (bool, optional): Có lưu chỉ số (index) của DataFrame không. Mặc định là False.
-        """
-        if self.df is None:
+        print(f"\n--- Đang áp dụng: {preprocessor.__class__.__name__} ---")
+        self.df = preprocessor.process(self.df)
+        print(f"-> Số lượng NaN còn lại: {preprocessor.missing_count}")
+
+    def get_data(self) -> pd.DataFrame:
+        return self.df
+    
+    def save_data(self, output_path: str) -> None:
+        """Ghi dữ liệu sau xử lý ra file."""
+        if self.df is None or self.df.empty:
             print("Lỗi: Không có dữ liệu để lưu.")
             return
-
+            
         try:
-            _, extension = os.path.splitext(filepath)
-            
-            if extension == '.csv':
-                self.df.to_csv(filepath, index=index)
-            elif extension == '.xlsx':
-                self.df.to_excel(filepath, index=index)
-            elif extension == '.json':
-                self.df.to_json(filepath, orient='records', indent=4)
+            if output_path.endswith('.csv'):
+                self.df.to_csv(output_path, index=False)
+            elif output_path.endswith('.xlsx'):
+                self.df.to_excel(output_path, index=False)
+            elif output_path.endswith('.json'):
+                self.df.to_json(output_path, orient='records')
             else:
-                raise ValueError(f"Định dạng file không được hỗ trợ: {extension}")
-            
-            print(f"Lưu dữ liệu đã xử lý thành công tại: {filepath}")
-
+                print("Lỗi: Định dạng file không hỗ trợ (chỉ csv, xlsx, json).")
+                return
+            print(f"--> [DataManager] Đã lưu dữ liệu vào '{output_path}'.")
         except Exception as e:
             print(f"Lỗi khi lưu file: {e}")
-
-    def get_processed_data(self) -> pd.DataFrame:
-        """
-        Trả về DataFrame đã được xử lý.
-
-        Returns:
-            pd.DataFrame: DataFrame hiện tại.
-        """
-        return self.df
-
-    # --- 2. Hàm tiện ích và Tự động phát hiện ---
-
-    @staticmethod
-    def get_column_types(df: pd.DataFrame) -> tuple[list, list, list]:
-        """
-        (staticmethod) Tự động phát hiện và phân loại các cột
-        thành 3 nhóm: số, phân loại (object/category), và ngày giờ.
-
-        Args:
-            df (pd.DataFrame): DataFrame để phân tích.
-
-        Returns:
-            tuple[list, list, list]: Một tuple chứa 
-                                     (numeric_cols, categorical_cols, datetime_cols)
-        """
-        numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
-        categorical_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
-        datetime_cols = df.select_dtypes(include=['datetime', 'datetimetz']).columns.tolist()
-        
-        # Lọc ra các cột datetime tiềm năng khỏi danh sách categorical
-        potential_dt_cols = []
-        remaining_categorical_cols = []
-        
-        for col in categorical_cols:
-            try:
-                # Thử parse một vài giá trị non-null để xác nhận
-                pd.to_datetime(df[col].dropna().sample(min(5, len(df[col].dropna()))), errors='raise')
-                # Nếu thành công, đây có thể là cột datetime
-                if col not in datetime_cols:
-                    potential_dt_cols.append(col)
-            except Exception:
-                # Nếu thất bại, nó là categorical
-                remaining_categorical_cols.append(col)
-        
-        # Cảnh báo người dùng về các cột datetime tiềm năng chưa được chuyển đổi
-        if potential_dt_cols:
-            print(f"Cảnh báo: Các cột sau có vẻ là datetime nhưng đang ở dạng 'object': {potential_dt_cols}")
-            print("Hãy sử dụng pd.to_datetime() trước khi dùng engineer_datetime_features().")
-
-        # Trả về các cột đã được xác nhận
-        return numeric_cols, remaining_categorical_cols, datetime_cols
-
-    # --- 3. Xử lý dữ liệu thiếu (Missing Data) ---
-
-    def handle_missing_values(self, strategy: str = 'mean', subset: list = None, fill_value=None):
-        """
-        Xử lý giá trị bị thiếu (NaN) trong các cột được chỉ định hoặc toàn bộ DataFrame.
-
-        Chiến lược 'auto' sẽ tự động áp dụng 'mean' cho cột số và 'mode' cho cột phân loại.
-
-        Args:
-            strategy (str): Chiến lược điền giá trị:
-                'mean', 'median': Chỉ áp dụng cho cột số.
-                'mode': Áp dụng cho cột số hoặc phân loại.
-                'ffill': Forward fill.
-                'bfill': Backward fill.
-                'constant': Điền bằng giá trị `fill_value`.
-                'drop': Xóa các hàng có giá trị thiếu.
-                'auto': Tự động dùng 'mean' cho số, 'mode' cho phân loại.
-            subset (list, optional): Danh sách các cột để áp dụng.
-                                     Nếu None, áp dụng cho các cột phù hợp.
-            fill_value (any, optional): Giá trị để điền nếu strategy='constant'.
-        """
-        if self.df is None:
-            print("Lỗi: Vui lòng tải dữ liệu trước.")
-            return
-
-        if strategy == 'drop':
-            self.df.dropna(subset=subset, inplace=True)
-            print(f"Đã xóa các hàng có giá trị NaN (trong subset: {subset}).")
-            return
-
-        numeric_cols, categorical_cols, _ = self.get_column_types(self.df)
-        
-        if subset is None:
-            if strategy == 'auto':
-                # Tự động xử lý tất cả các cột
-                self._fill_missing(numeric_cols, 'mean')
-                self._fill_missing(categorical_cols, 'mode')
-            elif strategy in ['mean', 'median']:
-                self._fill_missing(numeric_cols, strategy)
-            else:
-                self._fill_missing(self.df.columns, strategy, fill_value)
-        else:
-            # Chỉ xử lý các cột trong subset
-            self._fill_missing(subset, strategy, fill_value)
-
-    def _fill_missing(self, columns: list, strategy: str, fill_value=None):
-        """Hàm trợ giúp nội bộ cho handle_missing_values."""
-        try:
-            for col in columns:
-                if col not in self.df.columns:
-                    print(f"Cảnh báo: Cột '{col}' không tồn tại. Bỏ qua.")
-                    continue
-                
-                if strategy == 'mean':
-                    fill_val = self.df[col].mean()
-                elif strategy == 'median':
-                    fill_val = self.df[col].median()
-                elif strategy == 'mode':
-                    fill_val = self.df[col].mode()[0]
-                elif strategy == 'ffill':
-                    self.df[col].ffill(inplace=True)
-                    continue # ffill/bfill không cần fill_val
-                elif strategy == 'bfill':
-                    self.df[col].bfill(inplace=True)
-                    continue
-                elif strategy == 'constant':
-                    fill_val = fill_value
-                else:
-                    print(f"Chiến lược '{strategy}' không hợp lệ. Bỏ qua cột {col}.")
-                    continue
-                
-                self.df[col].fillna(fill_val, inplace=True)
-        except Exception as e:
-            print(f"Lỗi khi điền giá trị thiếu cho cột {columns} với chiến lược {strategy}: {e}")
+    
 
 
-    # --- 4. Xử lý dữ liệu ngoại lai (Outliers) ---
-
-    def handle_outliers(self, method: str = 'iqr', action: str = 'remove', threshold: float = 1.5, columns: list = None):
-        """
-        Phát hiện và xử lý dữ liệu ngoại lai bằng IQR, Z-score, hoặc Isolation Forest.
-
-        Args:
-            method (str): Phương pháp: 'iqr', 'zscore', 'isolation_forest'.
-            action (str): Hành động: 'remove' (xóa hàng) hoặc 'cap' (thay thế bằng
-                          giá trị giới hạn - chỉ hỗ trợ 'iqr' và 'zscore').
-            threshold (float): Ngưỡng:
-                - cho 'iqr': Hệ số nhân (mặc định 1.5).
-                - cho 'zscore': Giá trị Z-score (mặc định 3.0).
-                - cho 'isolation_forest': Tỷ lệ contamination (mặc định 0.1).
-            columns (list, optional): Các cột số để kiểm tra. Nếu None,
-                                      tự động chọn tất cả các cột số.
-        """
-        if self.df is None: return
-
-        if columns is None:
-            columns, _, _ = self.get_column_types(self.df)
-        
-        original_rows = self.df.shape[0]
-
-        try:
-            if method == 'iqr':
-                for col in columns:
-                    Q1 = self.df[col].quantile(0.25)
-                    Q3 = self.df[col].quantile(0.75)
-                    IQR = Q3 - Q1
-                    lower_bound = Q1 - threshold * IQR
-                    upper_bound = Q3 + threshold * IQR
-                    
-                    if action == 'remove':
-                        self.df = self.df[(self.df[col] >= lower_bound) & (self.df[col] <= upper_bound)]
-                    elif action == 'cap':
-                        self.df[col] = np.clip(self.df[col], lower_bound, upper_bound)
-            
-            elif method == 'zscore':
-                if threshold is None: threshold = 3.0 # Đặt ngưỡng mặc định cho z-score
-                for col in columns:
-                    z_scores = np.abs(stats.zscore(self.df[col].dropna()))
-                    if action == 'remove':
-                        # Lấy chỉ số của các giá trị không ngoại lai
-                        non_outlier_indices = self.df[col].dropna()[z_scores < threshold].index
-                        # Giữ lại các hàng NaN và các hàng không ngoại lai
-                        self.df = self.df[self.df[col].isna() | self.df.index.isin(non_outlier_indices)]
-                    elif action == 'cap':
-                        mean = self.df[col].mean()
-                        std = self.df[col].std()
-                        lower_bound = mean - threshold * std
-                        upper_bound = mean + threshold * std
-                        self.df[col] = np.clip(self.df[col], lower_bound, upper_bound)
-
-            elif method == 'isolation_forest':
-                if action == 'cap':
-                    print("Cảnh báo: 'cap' không được hỗ trợ cho 'isolation_forest'. Sử dụng 'remove'.")
-                
-                # Isolation Forest xử lý NaN không tốt, cần điền trước
-                df_subset = self.df[columns].fillna(self.df[columns].mean())
-                
-                if threshold is None: threshold = 0.1 # contamination
-                clf = IsolationForest(contamination=threshold, random_state=42)
-                preds = clf.fit_predict(df_subset)
-                
-                # Giữ lại các giá trị là inliers (preds == 1)
-                self.df = self.df[preds == 1]
-
-            print(f"Xử lý ngoại lai (Phương pháp: {method}): {original_rows - self.df.shape[0]} hàng đã bị xóa/xử lý.")
-            
-        except Exception as e:
-            print(f"Lỗi khi xử lý ngoại lai: {e}")
-
-    # --- 5. Chuẩn hóa và Mã hóa (Scaling & Encoding) ---
-
-    def scale_features(self, method: str = 'standard', columns: list = None):
-        """
-        Chuẩn hóa các đặc trưng số bằng StandardScaler hoặc MinMaxScaler.
-
-        Args:
-            method (str): 'standard' (StandardScaler) hoặc 'minmax' (MinMaxScaler).
-            columns (list, optional): Các cột để chuẩn hóa. Nếu None,
-                                      chuẩn hóa tất cả các cột số.
-        """
-        if self.df is None: return
-
-        if columns is None:
-            columns, _, _ = self.get_column_types(self.df)
-        
-        if not columns:
-            print("Không tìm thấy cột số nào để chuẩn hóa.")
-            return
-
-        if method == 'standard':
-            scaler = StandardScaler()
-        elif method == 'minmax':
-            scaler = MinMaxScaler()
-        else:
-            print(f"Phương pháp chuẩn hóa '{method}' không hợp lệ. Chỉ hỗ trợ 'standard', 'minmax'.")
-            return
-
-        try:
-            # Chỉ fit và transform trên các cột không thiếu
-            valid_data = self.df[columns].dropna()
-            if valid_data.empty:
-                print(f"Không có dữ liệu hợp lệ trong các cột {columns} để chuẩn hóa.")
-                return
-                
-            scaler.fit(valid_data)
-            self.df[columns] = scaler.transform(self.df[columns])
-            print(f"Đã chuẩn hóa các cột: {columns} bằng {method}")
-        except Exception as e:
-            print(f"Lỗi khi chuẩn hóa dữ liệu: {e}")
-
-    def encode_categorical(self, method: str = 'onehot', columns: list = None, drop_first: bool = True):
-        """
-        Mã hóa các biến phân loại bằng One-Hot Encoding hoặc Label Encoding.
-
-        Args:
-            method (str): 'onehot' (sử dụng pd.get_dummies) hoặc 'label' (LabelEncoder).
-            columns (list, optional): Cột để mã hóa. Nếu None, mã hóa tất cả
-                                      các cột 'object' hoặc 'category'.
-            drop_first (bool): Có xóa cột đầu tiên trong One-Hot Encoding
-                               để tránh đa cộng tuyến. Mặc định là True.
-        """
-        if self.df is None: return
-
-        if columns is None:
-            _, columns, _ = self.get_column_types(self.df)
-        
-        if not columns:
-            print("Không tìm thấy cột phân loại nào để mã hóa.")
-            return
-
-        try:
-            if method == 'onehot':
-                self.df = pd.get_dummies(self.df, columns=columns, drop_first=drop_first)
-                print(f"Đã mã hóa One-Hot cho các cột: {columns}")
-            elif method == 'label':
-                le = LabelEncoder()
-                for col in columns:
-                    # LabelEncoder không xử lý tốt NaN, chuyển NaN sang 1 chuỗi riêng
-                    self.df[col] = self.df[col].astype(str).fillna('NaN_String')
-                    self.df[col] = le.fit_transform(self.df[col])
-                print(f"Đã mã hóa Label cho các cột: {columns}")
-            else:
-                print(f"Phương pháp mã hóa '{method}' không hợp lệ. Chỉ hỗ trợ 'onehot', 'label'.")
-        except Exception as e:
-            print(f"Lỗi khi mã hóa dữ liệu: {e}")
-
-    # --- 6. Trích xuất đặc trưng (Feature Engineering) ---
-
-    @staticmethod
-    def custom_text_to_numeric(series: pd.Series, mapping: dict) -> pd.Series:
-        """
-        (staticmethod) Một hàm tiện ích tự định nghĩa để chuyển đổi
-        text sang số dựa trên một bản đồ (mapping)
-        
-        Ví dụ: {'Low': 1, 'Medium': 2, 'High': 3}
-
-        Args:
-            series (pd.Series): Cột dữ liệu dạng text.
-            mapping (dict): Từ điển định nghĩa việc chuyển đổi.
-
-        Returns:
-            pd.Series: Cột dữ liệu đã được chuyển đổi.
-        """
-        return series.map(mapping)
-
-    def apply_custom_mapping(self, column: str, mapping: dict):
-        """
-        Áp dụng hàm custom_text_to_numeric cho một cột cụ thể.
-
-        Args:
-            column (str): Tên cột cần áp dụng.
-            mapping (dict): Từ điển định nghĩa việc chuyển đổi.
-        """
-        if self.df is None or column not in self.df.columns:
-            print(f"Lỗi: Cột '{column}' không tồn tại.")
-            return
-        
-        try:
-            self.df[column] = self.custom_text_to_numeric(self.df[column], mapping)
-            print(f"Đã áp dụng mapping tùy chỉnh cho cột '{column}'.")
-        except Exception as e:
-            print(f"Lỗi khi áp dụng mapping: {e}")
-
-    def engineer_datetime_features(self, column: str, drop_original: bool = True):
-        """
-        Tạo các đặc trưng mới từ một cột ngày giờ (datetime).
-
-        Các đặc trưng bao gồm: year, month, day, dayofweek, is_weekend.
-
-        Args:
-            column (str): Tên cột chứa dữ liệu ngày giờ.
-            drop_original (bool): Có xóa cột ngày giờ gốc sau khi trích xuất.
-                                  Mặc định là True.
-        """
-        if self.df is None or column not in self.df.columns:
-            print(f"Lỗi: Cột '{column}' không tồn tại.")
-            return
-
-        try:
-            # Cố gắng chuyển đổi nếu chưa đúng định dạng
-            self.df[column] = pd.to_datetime(self.df[column])
-
-            # Trích xuất đặc trưng
-            self.df[f'{column}_year'] = self.df[column].dt.year
-            self.df[f'{column}_month'] = self.df[column].dt.month
-            self.df[f'{column}_day'] = self.df[column].dt.day
-            self.df[f'{column}_dayofweek'] = self.df[column].dt.dayofweek
-            self.df[f'{column}_is_weekend'] = (self.df[column].dt.dayofweek >= 5).astype(int)
-            
-            if drop_original:
-                self.df.drop(column, axis=1, inplace=True)
-                
-            print(f"Đã trích xuất đặc trưng datetime từ cột '{column}'.")
-            
-        except Exception as e:
-            print(f"Lỗi khi xử lý cột datetime '{column}': {e}")
 
 
-# ---------------------------------VÍ DỤ CÁCH DÙNG----------------------------
-# --- Chuẩn bị dữ liệu mẫu ---
-data = {
-    'ngay_mua': ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-10'],
-    'doanh_thu': [100, 110, np.nan, 105, 5000], # 5000 là outlier
-    'chi_phi': [50, 55, 60, 52, 65],
-    'thanh_pho': ['Hà Nội', 'TP.HCM', 'Đà Nẵng', 'Hà Nội', 'TP.HCM'],
-    'xep_hang': ['Tốt', 'Rất Tốt', 'Tốt', 'Khá', np.nan] # 'NaN' là missing
-}
-sample_df = pd.DataFrame(data)
+# ... (Toàn bộ code Class ở trên giữ nguyên) ...
 
-# --- 1. Khởi tạo đối tượng ---
-# Bạn có thể khởi tạo bằng DataFrame...
-processor = DataPreprocessor(sample_df)
+if __name__ == "__main__":
+    import numpy as np
+    
+    print("=== DEMO PIPELINE XỬ LÝ DỮ LIỆU TỰ ĐỘNG ===")
 
-# ...hoặc tải từ file (ví dụ nếu bạn đã lưu sample_df.to_csv('sample.csv'))
-# processor = DataPreprocessor.from_file('sample.csv')
+    # 1. GIẢ LẬP DỮ LIỆU THÔ (RAW DATA)
+    # Tạo dữ liệu chứa đủ các trường hợp: NaN, Outlier, Date, Category
+    raw_data = {
+        'date': ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05'],
+        'region': ['North', 'South', 'North', 'East', 'West'], # Biến phân loại
+        'sales': [100.0, 120.0, np.nan, 110.0, 50000.0],       # NaN và Outlier cực lớn
+        'temperature': [25.5, np.nan, np.nan, 26.0, 25.8],     # Dữ liệu liên tục bị thiếu
+        'customer_rating': ['High', 'Low', 'Medium', 'High', 'Low'] # Biến thứ tự (Ordinal)
+    }
+    
+    # Lưu tạm ra file CSV để test chức năng đọc file của DataManager
+    df_raw = pd.DataFrame(raw_data)
+    df_raw.to_csv('raw_data_demo.csv', index=False)
+    
+    print("-> Dữ liệu gốc (raw_data_demo.csv):")
+    print(df_raw)
+    print("-" * 50)
 
-print("--- Dữ liệu gốc ---")
-print(processor.get_processed_data())
-print(processor) # Sử dụng __repr__
+    # 2. KHỞI TẠO MANAGER VÀ LOAD DỮ LIỆU
+    manager = DataManager('raw_data_demo.csv')
 
-# --- 2. Xử lý dữ liệu thiếu (Missing Values) ---
-# Tự động điền 'mean' cho 'doanh_thu' và 'mode' cho 'xep_hang'
-processor.handle_missing_values(strategy='auto')
-print("\n--- Sau khi xử lý NaN (auto) ---")
-print(processor.get_processed_data())
+    # 3. ĐỊNH NGHĨA PIPELINE XỬ LÝ
+    processing_steps = [
+        # Bước 1: Xử lý giá trị thiếu
+        # - 'sales': điền trung bình
+        # - 'temperature': điền người trước đó (ffill) - Giả sử bạn đã thêm logic ffill vào Imputer
+        Imputer(strategy='mean', columns=['sales']),
+        Imputer(strategy='ffill', columns=['temperature']),
 
-# --- 3. Xử lý ngoại lai (Outliers) ---
-# Xóa các hàng có 'doanh_thu' ngoại lai bằng IQR
-processor.handle_outliers(method='iqr', action='remove', columns=['doanh_thu'])
-print("\n--- Sau khi xử lý Outlier (IQR) ---")
-print(processor.get_processed_data())
+        # Bước 2: Feature Engineering
+        # - Tách ngày tháng
+        # - One-Hot cho 'region'
+        # - Ordinal cho 'customer_rating'
+        FeatureEngineer(
+            datetime_col='date',
+            one_hot_cols=['region'],
+            ordinal_cols={'customer_rating': ['Low', 'Medium', 'High']}
+        ),
 
-# --- 4. Trích xuất đặc trưng (Feature Engineering) ---
-# 4a. Xử lý Datetime
+        # Bước 3: Xử lý ngoại lai
+        # - Loại bỏ giá trị 50000 trong cột sales bằng IQR
+        OutlierHandler(method='iqr', action='remove', columns=['sales']),
 
-processor.engineer_datetime_features('ngay_mua')
-print("\n--- Sau khi trích xuất Datetime ---")
-print(processor.get_processed_data().head())
+        # Bước 4: Chuẩn hóa dữ liệu
+        # - Đưa các cột số về khoảng [0, 1]
+        Scaler(method='minmax')
+    ]
 
-# 4b. Xử lý Text tùy chỉnh (Custom Mapping)
-mapping = {'Khá': 1, 'Tốt': 2, 'Rất Tốt': 3}
-processor.apply_custom_mapping('xep_hang', mapping)
-print("\n--- Sau khi Mapping tùy chỉnh 'xep_hang' ---")
-print(processor.get_processed_data())
+    # 4. CHẠY PIPELINE
+    for step in processing_steps:
+        manager.apply(step)
 
-# --- 5. Mã hóa biến phân loại (Encoding) ---
-# 'thanh_pho' là cột phân loại còn lại
-processor.encode_categorical(method='onehot', columns=['thanh_pho'])
-print("\n--- Sau khi Mã hóa One-Hot 'thanh_pho' ---")
-print(processor.get_processed_data())
+    # 5. XUẤT KẾT QUẢ
+    df_final = manager.get_data()
+    print("-" * 50)
+    print("-> Dữ liệu sau khi xử lý:")
+    print(df_final)
 
-# --- 6. Chuẩn hóa dữ liệu (Scaling) ---
-# Chuẩn hóa các cột số
-numeric_cols_to_scale = ['doanh_thu', 'chi_phi', 'xep_hang']
-processor.scale_features(method='standard', columns=numeric_cols_to_scale)
-print("\n--- Dữ liệu cuối cùng sau khi chuẩn hóa ---")
-print(processor.get_processed_data())
-
-# --- 7. Lấy DataFrame cuối cùng hoặc lưu ra file ---
-final_df = processor.get_processed_data()
-# processor.save_data('processed_data.csv')
+    # 6. LƯU FILE KẾT QUẢ (Test hàm save_data mới thêm)
+  
+    if hasattr(manager, 'save_data'):
+        manager.save_data('processed_data_final.csv')
+    else:
+        print("Cảnh báo: Bạn chưa thêm hàm save_data vào DataManager nên không lưu file.")
