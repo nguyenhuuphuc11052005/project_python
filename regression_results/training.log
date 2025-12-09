@@ -1,0 +1,199 @@
+2025-12-08 08:15:34,280 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (grid)...
+2025-12-08 08:15:38,396 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-08 08:15:38,406 - INFO - Kết quả đánh giá: RMSE=0.2182
+2025-12-08 08:15:49,675 - INFO - --- Auto Train: Linear Regression ---
+2025-12-08 08:15:49,676 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random)...
+2025-12-08 08:15:53,340 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-08 08:15:53,388 - INFO - Linear Regression - Score: 0.2182
+2025-12-08 08:15:53,965 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 08:15:53,972 - INFO - --- Auto Train: Ridge ---
+2025-12-08 08:15:53,976 - INFO - Bắt đầu tối ưu tham số cho Ridge (random)...
+2025-12-08 08:15:55,120 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 08:15:55,135 - INFO - Ridge - Score: 0.2182
+2025-12-08 08:15:55,161 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 08:15:55,162 - INFO - --- Auto Train: Lasso ---
+2025-12-08 08:15:55,164 - INFO - Bắt đầu tối ưu tham số cho Lasso (random)...
+2025-12-08 08:15:56,035 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 08:15:56,045 - INFO - Lasso - Score: 0.2884
+2025-12-08 08:15:56,048 - INFO - --- Auto Train: Decision Tree ---
+2025-12-08 08:15:56,055 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random)...
+2025-12-08 08:16:01,879 - INFO - Tối ưu hoàn tất. Best params: {'max_depth': 5}
+2025-12-08 08:16:01,886 - INFO - Decision Tree - Score: 0.1964
+2025-12-08 08:16:01,894 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 08:16:01,895 - INFO - --- Auto Train: Random Forest ---
+2025-12-08 08:16:01,897 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random)...
+2025-12-08 08:31:53,572 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'max_depth': 10}
+2025-12-08 08:31:53,680 - INFO - Random Forest - Score: 0.1644
+2025-12-08 08:31:53,733 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 08:31:53,734 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-08 08:31:53,737 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random)...
+2025-12-08 08:37:22,477 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 08:37:22,527 - INFO - Gradient Boosting - Score: 0.1995
+2025-12-08 08:37:22,528 - INFO - --- Auto Train: XGBoost ---
+2025-12-08 08:37:22,530 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random)...
+2025-12-08 08:37:46,585 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 08:37:46,632 - INFO - XGBoost - Score: 0.1803
+2025-12-08 08:37:46,634 - INFO - --- Auto Train: LightGBM ---
+2025-12-08 08:37:46,634 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random)...
+2025-12-08 08:38:35,618 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 08:38:35,664 - INFO - LightGBM - Score: 0.1819
+2025-12-08 08:38:35,665 - INFO - --- Auto Train: AdaBoost ---
+2025-12-08 08:38:35,667 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random)...
+2025-12-08 08:44:51,313 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.01}
+2025-12-08 08:44:51,442 - INFO - AdaBoost - Score: 0.2384
+2025-12-08 08:44:51,455 - INFO - BEST MODEL: Random Forest (Score: 0.1644)
+2025-12-08 08:44:51,502 - INFO - Đã load Model và Scaler từ: regression_results/best_model.pkl
+2025-12-08 08:44:51,503 - INFO - Scaler type: StandardScaler
+2025-12-08 08:44:51,598 - INFO - Kết quả đánh giá: RMSE=0.1644
+2025-12-08 09:50:38,213 - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-1' coro=<Kernel.poll_control_queue() running at /usr/local/lib/python3.12/dist-packages/ipykernel/kernelbase.py:284> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[_chain_future.<locals>._call_set_state() at /usr/lib/python3.12/asyncio/futures.py:396]>
+2025-12-08 09:53:49,886 - INFO - Đã nạp dữ liệu: 100000 mẫu, 72 đặc trưng.
+2025-12-08 09:53:49,976 - INFO - Chia dữ liệu: Train=(80000, 72), Test=(20000, 72)
+2025-12-08 09:53:49,978 - INFO - Đang thực hiện scaling dữ liệu theo phương pháp: standard
+2025-12-08 09:53:50,157 - INFO - Scaling hoàn tất.
+2025-12-08 09:53:50,173 - INFO - --- Auto Train: Linear Regression ---
+2025-12-08 09:53:50,174 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random)...
+2025-12-08 09:53:54,221 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-08 09:53:54,249 - INFO - Linear Regression - RMSE: 0.2182 | R2: 0.9343
+2025-12-08 09:53:54,284 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 09:53:54,287 - INFO - --- Auto Train: Ridge ---
+2025-12-08 09:53:54,289 - INFO - Bắt đầu tối ưu tham số cho Ridge (random)...
+2025-12-08 09:53:55,495 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 09:53:55,524 - INFO - Ridge - RMSE: 0.2182 | R2: 0.9343
+2025-12-08 09:53:55,550 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 09:53:55,551 - INFO - --- Auto Train: Lasso ---
+2025-12-08 09:53:55,553 - INFO - Bắt đầu tối ưu tham số cho Lasso (random)...
+2025-12-08 09:53:56,522 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 09:53:56,542 - INFO - Lasso - RMSE: 0.2884 | R2: 0.8852
+2025-12-08 09:53:56,550 - INFO - --- Auto Train: Decision Tree ---
+2025-12-08 09:53:56,552 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random)...
+2025-12-08 09:54:02,679 - INFO - Tối ưu hoàn tất. Best params: {'max_depth': 5}
+2025-12-08 09:54:02,688 - INFO - Decision Tree - RMSE: 0.1964 | R2: 0.9468
+2025-12-08 09:54:02,698 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 09:54:02,699 - INFO - --- Auto Train: Random Forest ---
+2025-12-08 09:54:02,700 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random)...
+2025-12-08 10:10:04,504 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'max_depth': 10}
+2025-12-08 10:10:04,588 - INFO - Random Forest - RMSE: 0.1644 | R2: 0.9627
+2025-12-08 10:10:04,641 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 10:10:04,642 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-08 10:10:04,648 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random)...
+2025-12-08 10:15:35,637 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 10:15:35,674 - INFO - Gradient Boosting - RMSE: 0.1995 | R2: 0.9451
+2025-12-08 10:15:35,675 - INFO - --- Auto Train: XGBoost ---
+2025-12-08 10:15:35,677 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random)...
+2025-12-08 10:15:59,767 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 10:15:59,816 - INFO - XGBoost - RMSE: 0.1803 | R2: 0.9552
+2025-12-08 10:15:59,817 - INFO - --- Auto Train: LightGBM ---
+2025-12-08 10:15:59,819 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random)...
+2025-12-08 10:16:46,457 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 10:16:46,505 - INFO - LightGBM - RMSE: 0.1819 | R2: 0.9544
+2025-12-08 10:16:46,507 - INFO - --- Auto Train: AdaBoost ---
+2025-12-08 10:16:46,507 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random)...
+2025-12-08 10:23:09,574 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.01}
+2025-12-08 10:23:09,708 - INFO - AdaBoost - RMSE: 0.2384 | R2: 0.9216
+2025-12-08 10:23:09,720 - INFO - BEST MODEL: Random Forest (RMSE: 0.1644)
+2025-12-08 10:23:09,754 - INFO - Đã load Model và Scaler từ: regression_results/best_model.pkl
+2025-12-08 10:23:09,755 - INFO - Scaler type: StandardScaler
+2025-12-08 10:23:09,851 - INFO - Kết quả đánh giá: RMSE=0.1644
+2025-12-08 13:01:45,761 - INFO - Đã nạp dữ liệu: 100000 mẫu, 72 đặc trưng.
+2025-12-08 13:01:46,481 - INFO - Chia dữ liệu: Train=(80000, 72), Test=(20000, 72)
+2025-12-08 13:01:46,483 - INFO - Đang thực hiện scaling dữ liệu theo phương pháp: standard
+2025-12-08 13:01:46,615 - INFO - Scaling hoàn tất.
+2025-12-08 13:45:16,696 - INFO - Đã nạp dữ liệu: 100000 mẫu, 72 đặc trưng.
+2025-12-08 13:45:16,791 - INFO - Chia dữ liệu: Train=(80000, 72), Test=(20000, 72)
+2025-12-08 13:45:16,793 - INFO - Đang thực hiện scaling dữ liệu theo phương pháp: standard
+2025-12-08 13:45:16,929 - INFO - Scaling hoàn tất.
+2025-12-08 13:45:16,946 - INFO - --- Auto Train: Linear Regression ---
+2025-12-08 13:45:16,947 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random)...
+2025-12-08 13:45:21,263 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-08 13:45:21,285 - INFO - Linear Regression - RMSE: 0.2182 | R2: 0.9343
+2025-12-08 13:45:21,319 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 13:45:21,321 - INFO - --- Auto Train: Ridge ---
+2025-12-08 13:45:21,325 - INFO - Bắt đầu tối ưu tham số cho Ridge (random)...
+2025-12-08 13:45:22,025 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 13:45:22,043 - INFO - Ridge - RMSE: 0.2182 | R2: 0.9343
+2025-12-08 13:45:22,063 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 13:45:22,066 - INFO - --- Auto Train: Lasso ---
+2025-12-08 13:45:22,067 - INFO - Bắt đầu tối ưu tham số cho Lasso (random)...
+2025-12-08 13:45:23,331 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 13:45:23,358 - INFO - Lasso - RMSE: 0.2884 | R2: 0.8852
+2025-12-08 13:45:23,366 - INFO - --- Auto Train: Decision Tree ---
+2025-12-08 13:45:23,369 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random)...
+2025-12-08 13:45:31,487 - INFO - Tối ưu hoàn tất. Best params: {'max_depth': 5}
+2025-12-08 13:45:31,498 - INFO - Decision Tree - RMSE: 0.1964 | R2: 0.9468
+2025-12-08 13:45:31,510 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 13:45:31,512 - INFO - --- Auto Train: Random Forest ---
+2025-12-08 13:45:31,513 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random)...
+2025-12-08 14:04:09,876 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'max_depth': 10}
+2025-12-08 14:04:09,984 - INFO - Random Forest - RMSE: 0.1644 | R2: 0.9627
+2025-12-08 14:04:10,058 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 14:04:10,059 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-08 14:04:10,063 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random)...
+2025-12-08 14:10:25,877 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 14:10:25,921 - INFO - Gradient Boosting - RMSE: 0.1995 | R2: 0.9451
+2025-12-08 14:10:25,923 - INFO - --- Auto Train: XGBoost ---
+2025-12-08 14:10:25,925 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random)...
+2025-12-08 14:10:52,955 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 14:10:53,009 - INFO - XGBoost - RMSE: 0.1803 | R2: 0.9552
+2025-12-08 14:10:53,010 - INFO - --- Auto Train: LightGBM ---
+2025-12-08 14:10:53,014 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random)...
+2025-12-08 14:11:54,603 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 14:11:54,657 - INFO - LightGBM - RMSE: 0.1819 | R2: 0.9544
+2025-12-08 14:11:54,659 - INFO - --- Auto Train: AdaBoost ---
+2025-12-08 14:11:54,660 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random)...
+2025-12-08 14:19:39,616 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.01}
+2025-12-08 14:19:39,885 - INFO - AdaBoost - RMSE: 0.2384 | R2: 0.9216
+2025-12-08 14:19:39,916 - INFO - BEST MODEL: Random Forest (RMSE: 0.1644)
+2025-12-08 14:19:39,972 - INFO - Đã load Model và Scaler từ: regression_results/best_model.pkl
+2025-12-08 14:19:39,974 - INFO - Scaler type: StandardScaler
+2025-12-08 14:19:40,170 - INFO - Kết quả đánh giá: RMSE=0.1644
+2025-12-08 14:50:16,880 - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-1' coro=<Kernel.poll_control_queue() running at /usr/local/lib/python3.12/dist-packages/ipykernel/kernelbase.py:284> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[_chain_future.<locals>._call_set_state() at /usr/lib/python3.12/asyncio/futures.py:396]>
+2025-12-08 14:53:23,045 - INFO - Đã nạp dữ liệu: 100000 mẫu, 72 đặc trưng.
+2025-12-08 14:53:23,214 - INFO - Chia dữ liệu: Train=(80000, 72), Test=(20000, 72)
+2025-12-08 14:53:23,215 - INFO - Đang thực hiện scaling dữ liệu theo phương pháp: standard
+2025-12-08 14:53:23,394 - INFO - Scaling hoàn tất.
+2025-12-08 14:53:23,417 - INFO - --- Auto Train: Linear Regression ---
+2025-12-08 14:53:23,419 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random)...
+2025-12-08 14:53:28,292 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-08 14:53:28,310 - INFO - Linear Regression - RMSE: 0.2182 | R2: 0.9343
+2025-12-08 14:53:28,333 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 14:53:28,335 - INFO - --- Auto Train: Ridge ---
+2025-12-08 14:53:28,338 - INFO - Bắt đầu tối ưu tham số cho Ridge (random)...
+2025-12-08 14:53:29,060 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 14:53:29,072 - INFO - Ridge - RMSE: 0.2182 | R2: 0.9343
+2025-12-08 14:53:29,083 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 14:53:29,084 - INFO - --- Auto Train: Lasso ---
+2025-12-08 14:53:29,087 - INFO - Bắt đầu tối ưu tham số cho Lasso (random)...
+2025-12-08 14:53:29,865 - INFO - Tối ưu hoàn tất. Best params: {'alpha': 0.1}
+2025-12-08 14:53:29,877 - INFO - Lasso - RMSE: 0.2884 | R2: 0.8852
+2025-12-08 14:53:29,879 - INFO - --- Auto Train: Decision Tree ---
+2025-12-08 14:53:29,880 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random)...
+2025-12-08 14:53:38,447 - INFO - Tối ưu hoàn tất. Best params: {'max_depth': 5}
+2025-12-08 14:53:38,463 - INFO - Decision Tree - RMSE: 0.1964 | R2: 0.9468
+2025-12-08 14:53:38,478 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 14:53:38,479 - INFO - --- Auto Train: Random Forest ---
+2025-12-08 14:53:38,482 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random)...
+2025-12-08 15:12:53,840 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'max_depth': 10}
+2025-12-08 15:12:53,964 - INFO - Random Forest - RMSE: 0.1644 | R2: 0.9627
+2025-12-08 15:12:54,045 - INFO - Đã lưu trọn gói Model + Scaler tại: regression_results/best_model.pkl
+2025-12-08 15:12:54,047 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-08 15:12:54,051 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random)...
+2025-12-08 15:19:16,273 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 15:19:16,315 - INFO - Gradient Boosting - RMSE: 0.1995 | R2: 0.9451
+2025-12-08 15:19:16,316 - INFO - --- Auto Train: XGBoost ---
+2025-12-08 15:19:16,318 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random)...
+2025-12-08 15:19:43,628 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 15:19:43,689 - INFO - XGBoost - RMSE: 0.1803 | R2: 0.9552
+2025-12-08 15:19:43,691 - INFO - --- Auto Train: LightGBM ---
+2025-12-08 15:19:43,693 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random)...
+2025-12-08 15:20:42,821 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.05}
+2025-12-08 15:20:42,878 - INFO - LightGBM - RMSE: 0.1819 | R2: 0.9544
+2025-12-08 15:20:42,879 - INFO - --- Auto Train: AdaBoost ---
+2025-12-08 15:20:42,880 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random)...
+2025-12-08 15:28:35,136 - INFO - Tối ưu hoàn tất. Best params: {'n_estimators': 50, 'learning_rate': 0.01}
+2025-12-08 15:28:35,328 - INFO - AdaBoost - RMSE: 0.2384 | R2: 0.9216
+2025-12-08 15:28:35,363 - INFO - BEST MODEL: Random Forest (RMSE: 0.1644)
+2025-12-08 15:28:35,412 - INFO - Đã load Model và Scaler từ: regression_results/best_model.pkl
+2025-12-08 15:28:35,414 - INFO - Scaler type: StandardScaler
+2025-12-08 15:28:35,524 - INFO - Kết quả đánh giá: RMSE=0.1644
