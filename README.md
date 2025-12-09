@@ -162,13 +162,17 @@ Hệ thống đã tự động huấn luyện và so sánh nhiều thuật toán
 ### 1. Bảng xếp hạng hiệu suất
 *Đơn vị đo lường chính: RMSE (Root Mean Squared Error) - Càng thấp càng tốt.*
 
-| Xếp hạng | Mô hình (Model) | RMSE (Log Scale) | Nhận xét |
+| Xếp hạng | Mô hình (Model) | RMSE (Log Scale) | Nhận xét hiệu năng |
 | :---: | :--- | :---: | :--- |
-| 🏆 **1** | **Random Forest** | **0.1644** | **Mô hình tốt nhất.** Xử lý xuất sắc các mối quan hệ phi tuyến tính và tương tác giữa các biến (ví dụ: BMI & Hút thuốc). |
-| 🥈 2 | XGBoost | 0.1803 | Hiệu suất rất tốt, tốc độ huấn luyện nhanh hơn Random Forest. |
-| 🥉 3 | LightGBM | 0.1819 | Tối ưu về mặt tài nguyên bộ nhớ, phù hợp dataset lớn. |
-| 4 | Gradient Boosting | 0.1995 | Ổn định nhưng tốc độ chậm hơn XGBoost/LightGBM. |
-| 5 | Linear Regression | 0.2182 | Hiệu suất thấp hơn do hạn chế trong việc mô hình hóa các dữ liệu phức tạp/phi tuyến. |
+| 🏆 **1** | **Random Forest** | **0.1644** | **Quán quân.** Hiệu suất vượt trội nhờ khả năng xử lý phi tuyến tính và tương tác phức tạp giữa các biến. |
+| 🥈 2 | XGBoost | 0.1803 | Á quân. Tốc độ huấn luyện rất nhanh và hiệu suất gần sát với Random Forest. |
+| 🥉 3 | LightGBM | 0.1819 | Tối ưu tài nguyên bộ nhớ, rất phù hợp khi dataset mở rộng lớn hơn. |
+| 4 | Decision Tree | 0.1964 | Khá tốt nhưng dễ bị overfitting so với các phương pháp Ensemble (Rừng cây). |
+| 5 | Gradient Boosting | 0.1995 | Ổn định, nhưng trong trường hợp này chưa tối ưu bằng XGBoost/LightGBM. |
+| 6 | Linear Regression | 0.2182 | Hiệu suất thấp hơn nhóm cây. Chỉ bắt được các mối quan hệ tuyến tính cơ bản. |
+| 7 | Ridge Regression | 0.2182 | Tương tự Linear Regression, việc điều chuẩn (Regularization) không giúp cải thiện nhiều trong trường hợp này. |
+| 8 | AdaBoost | 0.2384 | Hiệu suất kém ấn tượng nhất trong nhóm Boosting ở bài toán này. |
+| 9 | Lasso Regression | 0.2884 | Kém nhất. Việc ép các hệ số về 0 (Feature Selection quá mạnh) có thể đã làm mất thông tin quan trọng. |
 
 *(Lưu ý: RMSE được tính trên biến mục tiêu `annual_medical_cost` đã qua xử lý Log-transform)*
 
