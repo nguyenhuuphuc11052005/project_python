@@ -153,11 +153,40 @@ Sau quá trình phân tích khám phá, chúng tôi rút ra các kết luận ch
 * **Chỉ số lâm sàng:** Huyết áp, cholesterol và chỉ số HbA1c đóng vai trò quan trọng.
 * **Yếu tố bảo hiểm:** Mức khấu trừ (deductibles), đồng chi trả (copays) và lịch sử yêu cầu bồi thường (claims history) đóng góp đáng kể vào việc dự đoán.
 
-*![image.png](attachment:image.png)*
+*![Yếu tố ảnh hưởng](regression_results/factor_affect.png)*
 
-## 📊 Kết quả thực nghiệm
+## 📊 Kết quả thực nghiệm & So sánh (Model Evaluation)
 
-Mô hình tốt nhất hiện tại là **Random Forest** với các chỉ số trên tập Test:
+Hệ thống đã tự động huấn luyện và so sánh nhiều thuật toán khác nhau (Linear, Tree-based, Boosting). Dưới đây là kết quả đánh giá trên tập kiểm thử (Test Set):
+
+### 1. Bảng xếp hạng hiệu suất
+*Đơn vị đo lường chính: RMSE (Root Mean Squared Error) - Càng thấp càng tốt.*
+
+| Xếp hạng | Mô hình (Model) | RMSE (Log Scale) | Nhận xét |
+| :---: | :--- | :---: | :--- |
+| 🏆 **1** | **Random Forest** | **0.1644** | **Mô hình tốt nhất.** Xử lý xuất sắc các mối quan hệ phi tuyến tính và tương tác giữa các biến (ví dụ: BMI & Hút thuốc). |
+| 🥈 2 | XGBoost | 0.1803 | Hiệu suất rất tốt, tốc độ huấn luyện nhanh hơn Random Forest. |
+| 🥉 3 | LightGBM | 0.1819 | Tối ưu về mặt tài nguyên bộ nhớ, phù hợp dataset lớn. |
+| 4 | Gradient Boosting | 0.1995 | Ổn định nhưng tốc độ chậm hơn XGBoost/LightGBM. |
+| 5 | Linear Regression | 0.2182 | Hiệu suất thấp hơn do hạn chế trong việc mô hình hóa các dữ liệu phức tạp/phi tuyến. |
+
+*(Lưu ý: RMSE được tính trên biến mục tiêu `annual_medical_cost` đã qua xử lý Log-transform)*
+
+### 2. Biểu đồ so sánh trực quan
+Biểu đồ dưới đây minh họa sự chênh lệch về sai số giữa các mô hình, cho thấy sự vượt trội của nhóm thuật toán **Ensemble Learning** (Random Forest, Boosting) so với các thuật toán truyền thống.
+
+*![Biểu đồ so sánh RMSE các mô hình](regression_results/rmse_bar.png)*
+*![Biểu đồ so sánh MAE các mô hình](regression_results/mae_bar.png)*
+*![Biểu đồ so sánh MAPE các mô hình](regression_results/mape_bar.png)*
+*![Biểu đồ so sánh R^2 các mô hình](regression_results/r2_bar.png)*
+
+
+
+### 3. Phân tích kết quả
+* **Chiến thắng của Tree-based Models:** Random Forest và XGBoost vượt trội vì dữ liệu y tế chứa nhiều ngưỡng (thresholds) và tương tác phi tuyến. Ví dụ: BMI chỉ thực sự làm tăng vọt chi phí khi vượt qua mức 30 (béo phì) và đi kèm với việc hút thuốc. Linear Regression khó học được điều này nếu không tạo biến tương tác thủ công.
+* **Độ ổn định:** Random Forest cho thấy độ biến thiên thấp (Low Variance) khi kiểm thử chéo (Cross-validation), chứng tỏ mô hình ít bị Overfitting.
+
+
 
 | Metric | Giá trị (Log Scale) | Ý nghĩa |
 | :--- | :--- | :--- |
@@ -167,7 +196,7 @@ Mô hình tốt nhất hiện tại là **Random Forest** với các chỉ số 
 | **MAPE**| \~0.0173 | Sai số phần trăm trung bình|
 
 -----
-![image-2.png](attachment:image-2.png)
+*![Evaluattion](regression_results/best_model.png)*
 
 ## 📝 Ghi chú cho Google Colab
 
