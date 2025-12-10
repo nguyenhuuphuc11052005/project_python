@@ -9,11 +9,10 @@
 4. [Cài đặt (Cơ bản)](#-cài-đặt)
 5. [Hướng dẫn sử dụng (Pipeline)](#-hướng-dẫn-sử-dụng)
 6. [Hướng dẫn cài đặt & Chạy trên Local (Chi tiết)](#-hướng-dẫn-cài-đặt--chạy-trên-local-máy-cá-nhân)
-7. [Insight quan trọng từ dữ liệu (EDA)](#-insight-quan-trọng-từ-dữ-liệu-eda)
-8. [Kết quả thực nghiệm & So sánh](#-kết-quả-thực-nghiệm--so-sánh-model-evaluation)
-9. [Ghi chú cho Google Colab](#-ghi-chú-cho-google-colab)
-10. [Hướng phát triển tiếp theo](#-hướng-phát-triển-tiếp-theo-roadmap)
-11. [Tác giả](#-tác-giả)
+7. [Kết quả thực nghiệm & So sánh](#-kết-quả-thực-nghiệm--so-sánh-model-evaluation)
+8. [Ghi chú cho Google Colab](#-ghi-chú-cho-google-colab)
+9. [Hướng phát triển tiếp theo](#-hướng-phát-triển-tiếp-theo-roadmap)
+10. [Tác giả](#-tác-giả)
 
 
 
@@ -247,23 +246,12 @@ pip install jupyterlab
 jupyter lab
 ```
 
-Sau đó mở file `main.ipynb` và chạy (Run All).
+Sau đó mở file `EDA.ipynb`, `FE_MODELING.ipynb` và chạy (Run All).
 
 ------
 ------
 
-## 💡 Insight quan trọng từ dữ liệu (EDA)
 
-Sau quá trình phân tích khám phá, chúng tôi rút ra các kết luận chính ảnh hưởng đến mô hình:
-
-* **Mức độ sử dụng dịch vụ y tế (Healthcare Utilization):** Số lần khám bác sĩ, số lần nhập viện và số lượng thuốc sử dụng là những yếu tố dự báo hàng đầu (Top 1).
-* **Bệnh mãn tính (Chronic Conditions):** Số lượng và loại bệnh mãn tính tác động cực lớn đến chi phí.
-* **Tương tác Tuổi × Sức khỏe:** Người cao tuổi mắc nhiều bệnh nền sẽ có chi phí tăng theo **cấp số nhân** chứ không phải phép cộng đơn thuần.
-* **Điểm rủi ro (Risk Scores):** Các chỉ số đánh giá rủi ro được tính toán trước có giá trị dự báo rất cao.
-* **Chỉ số lâm sàng:** Huyết áp, cholesterol và chỉ số HbA1c đóng vai trò quan trọng.
-* **Yếu tố bảo hiểm:** Mức khấu trừ (deductibles), đồng chi trả (copays) và lịch sử yêu cầu bồi thường (claims history) đóng góp đáng kể vào việc dự đoán.
-
-*![Yếu tố ảnh hưởng](regression_results/factor_affect.png)*
 
 ## 📊 Kết quả thực nghiệm & So sánh (Model Evaluation)
 
@@ -286,14 +274,6 @@ Hệ thống đã tự động huấn luyện và so sánh nhiều thuật toán
 
 *(Lưu ý: RMSE được tính trên biến mục tiêu `annual_medical_cost` đã qua xử lý Log-transform)*
 
-### 2. Biểu đồ so sánh trực quan
-Biểu đồ dưới đây minh họa sự chênh lệch về sai số giữa các mô hình, cho thấy sự vượt trội của nhóm thuật toán **Ensemble Learning** (Random Forest, Boosting) so với các thuật toán truyền thống.
-
-*![Biểu đồ so sánh RMSE các mô hình](regression_results/rmse_bar.png)*
-*![Biểu đồ so sánh MAE các mô hình](regression_results/mae_bar.png)*
-*![Biểu đồ so sánh MAPE các mô hình](regression_results/mape_bar.png)*
-*![Biểu đồ so sánh R^2 các mô hình](regression_results/r2_bar.png)*
-
 
 
 ### 3. Phân tích kết quả
@@ -310,7 +290,7 @@ Biểu đồ dưới đây minh họa sự chênh lệch về sai số giữa c�
 | **MAPE**| \~0.0173 | Sai số phần trăm trung bình|
 
 -----
-*![Evaluattion](regression_results/best_model.png)*
+
 
 ## 📝 Ghi chú cho Google Colab
 
