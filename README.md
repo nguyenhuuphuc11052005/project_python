@@ -1,6 +1,19 @@
 
 Đồ án cuối kỳ môn Python cho khoa học dữ liệu
 
+## 📑 Mục lục
+
+1. [Bối cảnh & Mục tiêu](#-bối-cảnh--mục-tiêu)
+2. [Tính năng nổi bật](#-tính-năng-nổi-bật)
+3. [Cấu trúc dự án](#-cấu-trúc-dự-án)
+4. [Cài đặt (Cơ bản)](#-cài-đặt)
+5. [Hướng dẫn sử dụng (Pipeline)](#-hướng-dẫn-sử-dụng)
+6. [Hướng dẫn cài đặt & Chạy trên Local (Chi tiết)](#-hướng-dẫn-cài-đặt--chạy-trên-local-máy-cá-nhân)
+7. [Insight quan trọng từ dữ liệu (EDA)](#-insight-quan-trọng-từ-dữ-liệu-eda)
+8. [Kết quả thực nghiệm & So sánh](#-kết-quả-thực-nghiệm--so-sánh-model-evaluation)
+9. [Ghi chú cho Google Colab](#-ghi-chú-cho-google-colab)
+10. [Hướng phát triển tiếp theo](#-hướng-phát-triển-tiếp-theo-roadmap)
+11. [Tác giả](#-tác-giả)
 
 
 ````markdown
@@ -142,6 +155,103 @@ viz.plot_bar(x='score', y='model', title='So sánh RMSE (Thấp hơn là tốt)'
 
 -----
 
+-----
+
+````markdown
+## 🖥️ Hướng dẫn cài đặt & Chạy trên Local (Máy cá nhân)
+
+Để đảm bảo dự án chạy ổn định và không ảnh hưởng đến các dự án Python khác trong máy, chúng tôi khuyến nghị sử dụng **Môi trường ảo (Virtual Environment)**.
+
+### Bước 1: Clone dự án về máy
+Mở Terminal (hoặc CMD/PowerShell) và chạy lệnh:
+
+```bash
+# Clone repository (nếu bạn dùng git)
+git clone https://github.com/nguyenhuuphuc11052005/project_python
+cd project_python
+
+# Hoặc nếu bạn tải file zip, hãy giải nén và mở terminal tại thư mục đó.
+````
+
+### Bước 2: Tạo môi trường ảo (Virtual Environment)
+
+Việc này giúp cô lập các thư viện của dự án.
+
+```bash
+# Tạo môi trường ảo tên là 'venv'
+python -m venv venv
+```
+
+### Bước 3: Kích hoạt môi trường ảo
+
+Tùy thuộc vào hệ điều hành, lệnh kích hoạt sẽ khác nhau:
+
+  * **Trên Windows:**
+    ```bash
+    .\venv\Scripts\activate
+    ```
+  * **Trên macOS / Linux:**
+    ```bash
+    source venv/bin/activate
+    ```
+
+*(Sau khi kích hoạt, bạn sẽ thấy chữ `(venv)` xuất hiện ở đầu dòng lệnh)*
+
+### Bước 4: Cài đặt các thư viện phụ thuộc
+
+Chạy lệnh sau để cài đặt toàn bộ thư viện cần thiết từ file `requirements.txt`:
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### Bước 5: Cấu trúc thư mục dữ liệu
+
+Đảm bảo bạn đã tải file dữ liệu và đặt đúng vị trí (vì code mặc định đọc từ thư mục `data/` hoặc thư mục gốc tùy cấu hình):
+
+```text
+project_python/
+│── medical_insurance.csv  <-- File dữ liệu của bạn đặt ở đây
+│── preprocess.py
+│── model_trainer.py
+│── ...
+```
+
+### Bước 6: Chạy dự án
+
+Bạn có 2 cách để chạy:
+
+**Cách 1: Chạy từng module (Khuyên dùng để test)**
+Mỗi module đều có sẵn phần `if __name__ == "__main__":` để chạy demo.
+
+```bash
+# 1. Chạy thử quy trình xử lý dữ liệu
+python preprocess.py
+
+# 2. Chạy thử quy trình huấn luyện và so sánh model
+python model_trainer.py
+
+# 3. Chạy thử vẽ biểu đồ demo
+python visualize.py
+```
+
+**Cách 2: Chạy trên Jupyter Notebook**
+Nếu bạn muốn chạy file `main.ipynb` để phân tích từng bước:
+
+```bash
+# Cài đặt jupyter nếu chưa có
+pip install jupyterlab
+
+# Khởi động notebook
+jupyter lab
+```
+
+Sau đó mở file `main.ipynb` và chạy (Run All).
+
+------
+------
+
 ## 💡 Insight quan trọng từ dữ liệu (EDA)
 
 Sau quá trình phân tích khám phá, chúng tôi rút ra các kết luận chính ảnh hưởng đến mô hình:
@@ -210,7 +320,7 @@ Nếu chạy trên Google Colab, hãy upload 3 file module (`preprocess.py`, `vi
 from google.colab import drive
 drive.mount('/content/drive')
 import sys
-sys.path.append('/content/drive/MyDrive/path_to_your_project')
+%cd /content/drive/MyDrive/path_to_your_project
 ```
 
 ## 🚀 Hướng phát triển tiếp theo (Roadmap)
@@ -229,8 +339,6 @@ Dù mô hình hiện tại đã đạt kết quả tốt (RMSE ~0.16), dự án 
  
 
 -----
-
-````
 
 
 
