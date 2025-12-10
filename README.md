@@ -3,12 +3,12 @@
 
 ## 📑 Mục lục
 
-1. [Bối cảnh & Mục tiêu](#-bối-cảnh-&-mục-tiêu)
+1. [Bối cảnh & Mục tiêu](#-bối-cảnh--mục-tiêu)
 2. [Tính năng nổi bật](#-tính-năng-nổi-bật)
 3. [Cấu trúc dự án](#-cấu-trúc-dự-án)
 4. [Cài đặt (Cơ bản)](#-cài-đặt)
 5. [Hướng dẫn sử dụng (Pipeline)](#-hướng-dẫn-sử-dụng)
-6. [Hướng dẫn cài đặt & Chạy trên Local (Chi tiết)](#-hướng-dẫn-cài-đặt-&-chạy-trên-local-máy-cá-nhân)
+6. [Hướng dẫn cài đặt & Chạy trên Local (Chi tiết)](#-hướng-dẫn-cài-đặt--chạy-trên-local-máy-cá-nhân)
 7. [Insight quan trọng từ dữ liệu (EDA)](#-insight-quan-trọng-từ-dữ-liệu-eda)
 8. [Kết quả thực nghiệm & So sánh](#-kết-quả-thực-nghiệm--so-sánh-model-evaluation)
 9. [Ghi chú cho Google Colab](#-ghi-chú-cho-google-colab)
