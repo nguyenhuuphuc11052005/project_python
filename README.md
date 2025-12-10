@@ -3,12 +3,12 @@
 
 ## 📑 Mục lục
 
-1. [Bối cảnh & Mục tiêu](#-bối-cảnh--mục-tiêu)
+1. [Bối cảnh & Mục tiêu](#-bối-cảnh-&-mục-tiêu)
 2. [Tính năng nổi bật](#-tính-năng-nổi-bật)
 3. [Cấu trúc dự án](#-cấu-trúc-dự-án)
 4. [Cài đặt (Cơ bản)](#-cài-đặt)
 5. [Hướng dẫn sử dụng (Pipeline)](#-hướng-dẫn-sử-dụng)
-6. [Hướng dẫn cài đặt & Chạy trên Local (Chi tiết)](#-hướng-dẫn-cài-đặt--chạy-trên-local-máy-cá-nhân)
+6. [Hướng dẫn cài đặt & Chạy trên Local (Chi tiết)](#-hướng-dẫn-cài-đặt-&-chạy-trên-local-máy-cá-nhân)
 7. [Insight quan trọng từ dữ liệu (EDA)](#-insight-quan-trọng-từ-dữ-liệu-eda)
 8. [Kết quả thực nghiệm & So sánh](#-kết-quả-thực-nghiệm--so-sánh-model-evaluation)
 9. [Ghi chú cho Google Colab](#-ghi-chú-cho-google-colab)
@@ -16,7 +16,7 @@
 11. [Tác giả](#-tác-giả)
 
 
-````markdown
+
 # 🏥 Dự đoán Chi Phí Y Tế (Medical Cost Prediction)
 
 Dự án Machine Learning End-to-End nhằm dự đoán chi phí y tế hằng năm (`annual_medical_cost`) dựa trên hồ sơ nhân khẩu học, sức khỏe và bảo hiểm của bệnh nhân. Dự án được xây dựng theo hướng đối tượng (OOP) với các module tái sử dụng cao.
@@ -157,7 +157,7 @@ viz.plot_bar(x='score', y='model', title='So sánh RMSE (Thấp hơn là tốt)'
 
 -----
 
-````markdown
+
 ## 🖥️ Hướng dẫn cài đặt & Chạy trên Local (Máy cá nhân)
 
 Để đảm bảo dự án chạy ổn định và không ảnh hưởng đến các dự án Python khác trong máy, chúng tôi khuyến nghị sử dụng **Môi trường ảo (Virtual Environment)**.
