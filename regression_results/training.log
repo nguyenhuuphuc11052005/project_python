@@ -1,0 +1,211 @@
+2025-12-10 21:41:05,263 - INFO - ✅ Hệ thống Logging đã được cấu hình thành công trên VS Code.
+2025-12-10 21:41:05,313 - INFO - Đã nạp dữ liệu: 100000 mẫu, 71 đặc trưng.
+2025-12-10 21:41:05,349 - INFO - Chia dữ liệu: Train=(80000, 71), Test=(20000, 71)
+2025-12-10 21:41:05,356 - INFO - --- Auto Train: Linear Regression ---
+2025-12-10 21:41:05,359 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random) với standard scaler...
+2025-12-10 21:41:07,262 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-10 21:41:07,275 - INFO - Linear Regression - Score: 0.2183
+2025-12-10 21:41:07,276 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:41:07,276 - INFO - --- Auto Train: Ridge ---
+2025-12-10 21:41:07,277 - INFO - Bắt đầu tối ưu tham số cho Ridge (random) với standard scaler...
+2025-12-10 21:41:08,924 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 1.0}
+2025-12-10 21:41:08,933 - INFO - Ridge - Score: 0.2183
+2025-12-10 21:41:08,934 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:41:08,934 - INFO - --- Auto Train: Lasso ---
+2025-12-10 21:41:08,934 - INFO - Bắt đầu tối ưu tham số cho Lasso (random) với standard scaler...
+2025-12-10 21:41:10,144 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 0.1}
+2025-12-10 21:41:10,155 - INFO - Lasso - Score: 0.2884
+2025-12-10 21:41:10,155 - INFO - --- Auto Train: Decision Tree ---
+2025-12-10 21:41:10,156 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random) với standard scaler...
+2025-12-10 21:41:12,716 - INFO - Tối ưu hoàn tất. Best params: {'model__max_depth': 10}
+2025-12-10 21:41:12,725 - INFO - Decision Tree - Score: 0.1701
+2025-12-10 21:41:12,727 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:41:12,727 - INFO - --- Auto Train: Random Forest ---
+2025-12-10 21:41:12,727 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random) với standard scaler...
+2025-12-10 21:42:31,106 - INFO - --- Auto Train: Linear Regression ---
+2025-12-10 21:42:31,107 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random) với standard scaler...
+2025-12-10 21:42:33,035 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-10 21:42:33,047 - INFO - Linear Regression - Score: 0.2183
+2025-12-10 21:42:33,048 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:42:33,049 - INFO - --- Auto Train: Ridge ---
+2025-12-10 21:42:33,049 - INFO - Bắt đầu tối ưu tham số cho Ridge (random) với standard scaler...
+2025-12-10 21:42:34,850 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 1.0}
+2025-12-10 21:42:34,860 - INFO - Ridge - Score: 0.2183
+2025-12-10 21:42:34,862 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:42:34,862 - INFO - --- Auto Train: Lasso ---
+2025-12-10 21:42:34,862 - INFO - Bắt đầu tối ưu tham số cho Lasso (random) với standard scaler...
+2025-12-10 21:42:36,314 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 0.1}
+2025-12-10 21:42:36,322 - INFO - Lasso - Score: 0.2884
+2025-12-10 21:42:36,322 - INFO - --- Auto Train: Decision Tree ---
+2025-12-10 21:42:36,323 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random) với standard scaler...
+2025-12-10 21:42:38,977 - INFO - Tối ưu hoàn tất. Best params: {'model__max_depth': 10}
+2025-12-10 21:42:38,988 - INFO - Decision Tree - Score: 0.1701
+2025-12-10 21:42:38,990 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:42:38,990 - INFO - --- Auto Train: Random Forest ---
+2025-12-10 21:42:38,990 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random) với standard scaler...
+2025-12-10 21:45:04,565 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__max_depth': 15}
+2025-12-10 21:45:04,685 - INFO - Random Forest - Score: 0.1636
+2025-12-10 21:45:04,764 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:45:04,764 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-10 21:45:04,765 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random) với standard scaler...
+2025-12-10 21:46:37,983 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 21:46:38,018 - INFO - Gradient Boosting - Score: 0.1651
+2025-12-10 21:46:38,018 - INFO - --- Auto Train: XGBoost ---
+2025-12-10 21:46:38,019 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random) với standard scaler...
+2025-12-10 21:46:41,611 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 21:46:41,627 - INFO - XGBoost - Score: 0.1623
+2025-12-10 21:46:41,638 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:46:41,639 - INFO - --- Auto Train: LightGBM ---
+2025-12-10 21:46:41,640 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random) với standard scaler...
+2025-12-10 21:46:47,520 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 21:46:47,577 - INFO - LightGBM - Score: 0.1622
+2025-12-10 21:46:47,580 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 21:46:47,580 - INFO - --- Auto Train: AdaBoost ---
+2025-12-10 21:46:47,581 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random) với standard scaler...
+2025-12-10 21:48:37,467 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 21:48:37,649 - INFO - AdaBoost - Score: 0.2043
+2025-12-10 21:48:37,656 - INFO - BEST MODEL: LightGBM (Score: 0.1622)
+2025-12-10 21:48:37,659 - INFO - Đã load Pipeline từ: regression_results/best_model.pkl
+2025-12-10 21:48:37,684 - INFO - Kết quả đánh giá: RMSE=0.1622, R2=0.9637
+2025-12-10 22:04:46,240 - INFO - ✅ Hệ thống Logging đã được cấu hình thành công trên VS Code.
+2025-12-10 22:04:46,284 - INFO - Đã nạp dữ liệu: 100000 mẫu, 71 đặc trưng.
+2025-12-10 22:04:46,323 - INFO - Chia dữ liệu: Train=(80000, 71), Test=(20000, 71)
+2025-12-10 22:04:46,330 - INFO - --- Auto Train: Linear Regression ---
+2025-12-10 22:04:46,330 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random) với standard scaler...
+2025-12-10 22:04:48,357 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-10 22:04:48,371 - INFO - Linear Regression - Score: 0.2183
+2025-12-10 22:04:48,373 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:04:48,374 - INFO - --- Auto Train: Ridge ---
+2025-12-10 22:04:48,374 - INFO - Bắt đầu tối ưu tham số cho Ridge (random) với standard scaler...
+2025-12-10 22:04:49,769 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 1.0}
+2025-12-10 22:04:49,778 - INFO - Ridge - Score: 0.2183
+2025-12-10 22:04:49,779 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:04:49,780 - INFO - --- Auto Train: Lasso ---
+2025-12-10 22:04:49,780 - INFO - Bắt đầu tối ưu tham số cho Lasso (random) với standard scaler...
+2025-12-10 22:04:50,484 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 0.1}
+2025-12-10 22:04:50,493 - INFO - Lasso - Score: 0.2884
+2025-12-10 22:04:50,493 - INFO - --- Auto Train: Decision Tree ---
+2025-12-10 22:04:50,493 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random) với standard scaler...
+2025-12-10 22:04:54,036 - INFO - Tối ưu hoàn tất. Best params: {'model__max_depth': 10}
+2025-12-10 22:04:54,048 - INFO - Decision Tree - Score: 0.1701
+2025-12-10 22:04:54,051 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:04:54,052 - INFO - --- Auto Train: Random Forest ---
+2025-12-10 22:04:54,052 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random) với standard scaler...
+2025-12-10 22:07:07,445 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__max_depth': 15}
+2025-12-10 22:07:07,522 - INFO - Random Forest - Score: 0.1636
+2025-12-10 22:07:07,604 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:07:07,604 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-10 22:07:07,605 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random) với standard scaler...
+2025-12-10 22:08:32,650 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 22:08:32,686 - INFO - Gradient Boosting - Score: 0.1651
+2025-12-10 22:08:32,686 - INFO - --- Auto Train: XGBoost ---
+2025-12-10 22:08:32,687 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random) với standard scaler...
+2025-12-10 22:08:36,365 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 22:08:36,380 - INFO - XGBoost - Score: 0.1623
+2025-12-10 22:08:36,389 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:08:36,389 - INFO - --- Auto Train: LightGBM ---
+2025-12-10 22:08:36,389 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random) với standard scaler...
+2025-12-10 22:08:42,413 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 22:08:42,449 - INFO - LightGBM - Score: 0.1622
+2025-12-10 22:08:42,453 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:08:42,453 - INFO - --- Auto Train: AdaBoost ---
+2025-12-10 22:08:42,453 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random) với standard scaler...
+2025-12-10 22:10:34,985 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 22:10:35,235 - INFO - AdaBoost - Score: 0.2043
+2025-12-10 22:10:35,242 - INFO - BEST MODEL: LightGBM (Score: 0.1622)
+2025-12-10 22:10:35,244 - INFO - Đã load Pipeline từ: regression_results/best_model.pkl
+2025-12-10 22:10:35,273 - INFO - Kết quả đánh giá: RMSE=0.1622, R2=0.9637
+2025-12-10 22:56:35,726 - INFO - ✅ Hệ thống Logging đã được cấu hình thành công trên VS Code.
+2025-12-10 22:56:35,789 - INFO - Đã nạp dữ liệu: 100000 mẫu, 98 đặc trưng.
+2025-12-10 22:56:35,842 - INFO - Chia dữ liệu: Train=(80000, 98), Test=(20000, 98)
+2025-12-10 22:57:52,892 - INFO - --- Auto Train: Linear Regression ---
+2025-12-10 22:57:52,897 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random) với standard scaler...
+2025-12-10 22:57:55,500 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-10 22:57:55,517 - INFO - Linear Regression - Score: 0.2180
+2025-12-10 22:57:55,519 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:57:55,520 - INFO - --- Auto Train: Ridge ---
+2025-12-10 22:57:55,520 - INFO - Bắt đầu tối ưu tham số cho Ridge (random) với standard scaler...
+2025-12-10 22:57:57,892 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 1.0}
+2025-12-10 22:57:57,906 - INFO - Ridge - Score: 0.2180
+2025-12-10 22:57:57,909 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:57:57,910 - INFO - --- Auto Train: Lasso ---
+2025-12-10 22:57:57,911 - INFO - Bắt đầu tối ưu tham số cho Lasso (random) với standard scaler...
+2025-12-10 22:57:59,018 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 0.1}
+2025-12-10 22:57:59,028 - INFO - Lasso - Score: 0.2884
+2025-12-10 22:57:59,028 - INFO - --- Auto Train: Decision Tree ---
+2025-12-10 22:57:59,029 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random) với standard scaler...
+2025-12-10 22:58:04,121 - INFO - Tối ưu hoàn tất. Best params: {'model__max_depth': 10}
+2025-12-10 22:58:04,144 - INFO - Decision Tree - Score: 0.1706
+2025-12-10 22:58:04,147 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 22:58:04,147 - INFO - --- Auto Train: Random Forest ---
+2025-12-10 22:58:04,147 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random) với standard scaler...
+2025-12-10 23:01:06,141 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__max_depth': 15}
+2025-12-10 23:01:06,234 - INFO - Random Forest - Score: 0.1638
+2025-12-10 23:01:06,306 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 23:01:06,306 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-10 23:01:06,307 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random) với standard scaler...
+2025-12-10 23:02:54,685 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 23:02:54,728 - INFO - Gradient Boosting - Score: 0.1651
+2025-12-10 23:02:54,729 - INFO - --- Auto Train: XGBoost ---
+2025-12-10 23:02:54,729 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random) với standard scaler...
+2025-12-10 23:03:00,069 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 23:03:00,096 - INFO - XGBoost - Score: 0.1624
+2025-12-10 23:03:00,103 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-10 23:03:00,103 - INFO - --- Auto Train: LightGBM ---
+2025-12-10 23:03:00,103 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random) với standard scaler...
+2025-12-10 23:03:08,081 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 23:03:08,121 - INFO - LightGBM - Score: 0.1625
+2025-12-10 23:03:08,121 - INFO - --- Auto Train: AdaBoost ---
+2025-12-10 23:03:08,122 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random) với standard scaler...
+2025-12-10 23:05:33,556 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-10 23:05:33,771 - INFO - AdaBoost - Score: 0.2050
+2025-12-10 23:05:33,777 - INFO - BEST MODEL: XGBoost (Score: 0.1624)
+2025-12-10 23:05:33,781 - INFO - Đã load Pipeline từ: regression_results/best_model.pkl
+2025-12-10 23:05:33,798 - INFO - Kết quả đánh giá: RMSE=0.1624, R2=0.9636
+2025-12-11 07:34:55,159 - INFO - ✅ Hệ thống Logging đã được cấu hình thành công trên VS Code.
+2025-12-11 07:34:55,217 - INFO - Đã nạp dữ liệu: 100000 mẫu, 98 đặc trưng.
+2025-12-11 07:34:55,289 - INFO - Chia dữ liệu: Train=(80000, 98), Test=(20000, 98)
+2025-12-11 07:34:55,317 - INFO - --- Auto Train: Linear Regression ---
+2025-12-11 07:34:55,319 - INFO - Bắt đầu tối ưu tham số cho LinearRegression (random) với standard scaler...
+2025-12-11 07:34:58,120 - INFO - Tối ưu hoàn tất. Best params: {}
+2025-12-11 07:34:58,139 - INFO - Linear Regression - Score: 0.2180
+2025-12-11 07:34:58,141 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-11 07:34:58,142 - INFO - --- Auto Train: Ridge ---
+2025-12-11 07:34:58,142 - INFO - Bắt đầu tối ưu tham số cho Ridge (random) với standard scaler...
+2025-12-11 07:35:00,823 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 1.0}
+2025-12-11 07:35:00,839 - INFO - Ridge - Score: 0.2180
+2025-12-11 07:35:00,843 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-11 07:35:00,845 - INFO - --- Auto Train: Lasso ---
+2025-12-11 07:35:00,846 - INFO - Bắt đầu tối ưu tham số cho Lasso (random) với standard scaler...
+2025-12-11 07:35:02,355 - INFO - Tối ưu hoàn tất. Best params: {'model__alpha': 0.1}
+2025-12-11 07:35:02,375 - INFO - Lasso - Score: 0.2884
+2025-12-11 07:35:02,375 - INFO - --- Auto Train: Decision Tree ---
+2025-12-11 07:35:02,376 - INFO - Bắt đầu tối ưu tham số cho DecisionTreeRegressor (random) với standard scaler...
+2025-12-11 07:35:06,946 - INFO - Tối ưu hoàn tất. Best params: {'model__max_depth': 10}
+2025-12-11 07:35:06,960 - INFO - Decision Tree - Score: 0.1706
+2025-12-11 07:35:06,962 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-11 07:35:06,963 - INFO - --- Auto Train: Random Forest ---
+2025-12-11 07:35:06,963 - INFO - Bắt đầu tối ưu tham số cho RandomForestRegressor (random) với standard scaler...
+2025-12-11 07:38:09,261 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__max_depth': 15}
+2025-12-11 07:38:09,372 - INFO - Random Forest - Score: 0.1638
+2025-12-11 07:38:09,435 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-11 07:38:09,435 - INFO - --- Auto Train: Gradient Boosting ---
+2025-12-11 07:38:09,436 - INFO - Bắt đầu tối ưu tham số cho GradientBoostingRegressor (random) với standard scaler...
+2025-12-11 07:39:56,651 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-11 07:39:56,693 - INFO - Gradient Boosting - Score: 0.1651
+2025-12-11 07:39:56,694 - INFO - --- Auto Train: XGBoost ---
+2025-12-11 07:39:56,694 - INFO - Bắt đầu tối ưu tham số cho XGBRegressor (random) với standard scaler...
+2025-12-11 07:40:01,880 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-11 07:40:01,911 - INFO - XGBoost - Score: 0.1624
+2025-12-11 07:40:01,923 - INFO - Đã lưu trọn gói Pipeline tại: regression_results/best_model.pkl
+2025-12-11 07:40:01,923 - INFO - --- Auto Train: LightGBM ---
+2025-12-11 07:40:01,924 - INFO - Bắt đầu tối ưu tham số cho LGBMRegressor (random) với standard scaler...
+2025-12-11 07:40:09,634 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-11 07:40:09,685 - INFO - LightGBM - Score: 0.1625
+2025-12-11 07:40:09,685 - INFO - --- Auto Train: AdaBoost ---
+2025-12-11 07:40:09,686 - INFO - Bắt đầu tối ưu tham số cho AdaBoostRegressor (random) với standard scaler...
+2025-12-11 07:42:30,968 - INFO - Tối ưu hoàn tất. Best params: {'model__n_estimators': 100, 'model__learning_rate': 0.1}
+2025-12-11 07:42:31,166 - INFO - AdaBoost - Score: 0.2050
+2025-12-11 07:42:31,171 - INFO - BEST MODEL: XGBoost (Score: 0.1624)
+2025-12-11 07:42:31,174 - INFO - Đã load Pipeline từ: regression_results/best_model.pkl
+2025-12-11 07:42:31,192 - INFO - Kết quả đánh giá: RMSE=0.1624, R2=0.9636
