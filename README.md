@@ -149,7 +149,7 @@ models_config = {
 }
 
 # 3. Chạy tự động
-trainer.auto_train(models_config, output_dir='results')
+trainer.auto_train(models_config, output_dir='results',scaler_type='standard')
 ```
 
 ### Bước 3: Đánh giá và Trực quan hóa
@@ -345,6 +345,3 @@ Dù mô hình hiện tại đã đạt kết quả tốt (RMSE ~0.16), dự án 
  
 
 -----
-
-
-
