@@ -252,7 +252,7 @@ python visualize.py
 ```
 
 **Cách 2: Chạy trên Jupyter Notebook**
-Nếu bạn muốn chạy file `main.ipynb` để phân tích từng bước:
+Nếu bạn muốn chạy file `EDA.ipynb`, `FE_MODELING.ipynb` để phân tích từng bước:
 
 ```bash
 # Cài đặt jupyter nếu chưa có
