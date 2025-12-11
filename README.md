@@ -57,10 +57,25 @@ Dữ liệu bao gồm 100.000 bản ghi với các nhóm thông tin:
 │   ├── best_model.pkl          # Model tốt nhất đã huấn luyện
 │   ├── training.log            # Log quá trình chạy
 │   └── model_comparison.csv    # Bảng so sánh các model
-│   ├── các plot so sánh các model
-├── preprocess.py               # Module làm sạch và biến đổi dữ liệu
+│   └── các plot so sánh các model
+│
+├── preprocessing/              # Thư mục module chính
+│   ├── __init__.py             # File khởi tạo module
+│   ├── base.py                 # Chứa BasePreprocessor
+│   ├── imputer.py              # Chứa class Imputer
+│   ├── scaler.py               # Chứa class Scaler
+│   ├── outlier_handler.py      # Chứa class OutlierHandler
+│   ├── feature_engineer.py     # Chứa class FeatureEngineer
+│   └── manager.py              # Chứa class DataManager
+└── demo_preprocess.py          # File chạy demo cho module preprocessing
+│
+├── model_training/             # Folder Module
+│   ├── __init__.py             # Khởi tạo module
+│   ├── logger_config.py        # Cấu hình logging
+│   └── trainer.py              # Chứa class ModelTrainer chính
+└── demo_training.py            # File script để chạy demo module model_traning
+│
 ├── visualize.py                # Module trực quan hóa
-├── model_trainer.py            # Module quản lý huấn luyện và đánh giá
 ├── EDA.ipynb                   # Notebook để chạy phần EDA của dự án
 ├── FE_MODELING.ipynb           # Notebook để chạy feature engineering và modeling
 ├── requirements.txt            # Các thư viện cần thiết
@@ -90,10 +105,10 @@ pip install -r requirements.txt
 
 ### Bước 1: Chuẩn bị dữ liệu và Tiền xử lý
 
-Sử dụng `DataManager` và các bộ xử lý trong `preprocess.py`.
+Sử dụng `DataManager` và các bộ xử lý trong module `preprocesing`.
 
 ```python
-from preprocess import DataManager, Imputer, Scaler, FeatureEngineer, OutlierHandler
+from preprocessing import DataManager, Imputer, Scaler, OutlierHandler, FeatureEngineer
 
 # 1. Load dữ liệu
 manager = DataManager('data/medical_cost.csv')
@@ -115,13 +130,14 @@ df_clean = manager.get_data()
 
 ### Bước 2: Huấn luyện và So sánh mô hình
 
-Sử dụng `ModelTrainer` để tự động tìm mô hình tốt nhất.
+Sử dụng `model_training` để tự động tìm mô hình tốt nhất.
 
 ```python
-from model_trainer import ModelTrainer
+from model_training import ModelTrainer, setup_logging
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 # 1. Khởi tạo
+setup_logging()
 trainer = ModelTrainer(task_type='regression')
 trainer.load_data(df_clean.drop('annual_medical_cost', axis=1), df_clean['annual_medical_cost'])
 trainer.split_data()
@@ -166,7 +182,7 @@ Mở Terminal (hoặc CMD/PowerShell) và chạy lệnh:
 
 ```bash
 # Clone repository (nếu bạn dùng git)
-git clone https://github.com/nguyenhuuphuc11052005/project_python
+git clone https://github.com/nguyenhuuphuc11052005/project_python.git
 cd project_python
 
 # Hoặc nếu bạn tải file zip, hãy giải nén và mở terminal tại thư mục đó.
@@ -212,8 +228,8 @@ pip install -r requirements.txt
 ```text
 project_python/
 │── medical_insurance.csv  <-- File dữ liệu của bạn đặt ở đây
-│── preprocess.py
-│── model_trainer.py
+│── preprocessing
+│── model_training
 │── ...
 ```
 
@@ -226,10 +242,10 @@ Mỗi module đều có sẵn phần `if __name__ == "__main__":` để chạy d
 
 ```bash
 # 1. Chạy thử quy trình xử lý dữ liệu
-python preprocess.py
+python demo_preprocess.py
 
 # 2. Chạy thử quy trình huấn luyện và so sánh model
-python model_trainer.py
+python demo_training.py
 
 # 3. Chạy thử vẽ biểu đồ demo
 python visualize.py
@@ -246,9 +262,17 @@ pip install jupyterlab
 jupyter lab
 ```
 
-Sau đó mở file `EDA.ipynb`, `FE_MODELING.ipynb` và chạy (Run All).
+Sau đó mở file `EDA.ipynb` chỉnh sửa lại dòng 
+```bash
+%cd path_to_your_project
+```
 
-------
+chạy (Run All) để xem EDA và xử lý missing data. Rồi sau đó mới mở file `FE_MODELING.ipynb` chỉnh sửa lại dòng
+```bash
+%cd path_to_your_project
+```
+và chạy (Run All).
+
 ------
 
 
@@ -260,34 +284,35 @@ Hệ thống đã tự động huấn luyện và so sánh nhiều thuật toán
 ### 1. Bảng xếp hạng hiệu suất
 *Đơn vị đo lường chính: RMSE (Root Mean Squared Error) - Càng thấp càng tốt.*
 
-| Xếp hạng | Mô hình (Model) | RMSE (Log Scale) | Nhận xét hiệu năng |
-| :---: | :--- | :---: | :--- |
-| 🏆 **1** | **Random Forest** | **0.1644** | **Quán quân.** Hiệu suất vượt trội nhờ khả năng xử lý phi tuyến tính và tương tác phức tạp giữa các biến. |
-| 🥈 2 | XGBoost | 0.1803 | Á quân. Tốc độ huấn luyện rất nhanh và hiệu suất gần sát với Random Forest. |
-| 🥉 3 | LightGBM | 0.1819 | Tối ưu tài nguyên bộ nhớ, rất phù hợp khi dataset mở rộng lớn hơn. |
-| 4 | Decision Tree | 0.1964 | Khá tốt nhưng dễ bị overfitting so với các phương pháp Ensemble (Rừng cây). |
-| 5 | Gradient Boosting | 0.1995 | Ổn định, nhưng trong trường hợp này chưa tối ưu bằng XGBoost/LightGBM. |
-| 6 | Linear Regression | 0.2182 | Hiệu suất thấp hơn nhóm cây. Chỉ bắt được các mối quan hệ tuyến tính cơ bản. |
-| 7 | Ridge Regression | 0.2182 | Tương tự Linear Regression, việc điều chuẩn (Regularization) không giúp cải thiện nhiều trong trường hợp này. |
-| 8 | AdaBoost | 0.2384 | Hiệu suất kém ấn tượng nhất trong nhóm Boosting ở bài toán này. |
-| 9 | Lasso Regression | 0.2884 | Kém nhất. Việc ép các hệ số về 0 (Feature Selection quá mạnh) có thể đã làm mất thông tin quan trọng. |
+
+| Xếp hạng | Mô hình (Model) | RMSE | R² Score | Nhận xét chi tiết |
+| :---: | :--- | :---: | :---: | :--- |
+| 🏆 **1** | **XGBoost** | **0.1624** | **0.9636** | **Quán quân.** Đạt độ lỗi thấp nhất. Khả năng tối ưu hóa gradient boosting cực tốt giúp mô hình nắm bắt chính xác các mẫu dữ liệu phức tạp. |
+| 🥈 2 | LightGBM | 0.1625 | 0.9635 | **Á quân.** Hiệu năng gần như ngang ngửa XGBoost (chênh lệch không đáng kể), nhưng thường có lợi thế về tốc độ huấn luyện nhanh hơn. |
+| 🥉 3 | Random Forest | 0.1638 | 0.9630 | Rất ổn định. Tuy nhiên ở dataset này, phương pháp Boosting (XGBoost/LightGBM) đã chứng minh hiệu quả hơn phương pháp Bagging. |
+| 4 | Gradient Boosting | 0.1651 | 0.9624 | Hiệu quả cao, xếp ngay sau top 3. Là nền tảng tốt nhưng chưa tối ưu bằng các phiên bản cải tiến như XGB/LGBM. |
+| 5 | Decision Tree | 0.1706 | 0.9598 | Khá ấn tượng đối với một mô hình đơn lẻ, nhưng vẫn thua kém các mô hình tổ hợp (Ensemble) do khả năng tổng quát hóa kém hơn. |
+| 6 | AdaBoost | 0.2050 | 0.9420 | Hiệu suất trung bình khá. Cơ chế trọng số thích nghi chưa phát huy tác dụng tối đa so với Gradient Boosting ở bài toán này. |
+| 7 | Ridge Regression | 0.2180 | 0.9344 | Tốt hơn Linear Regression một chút xíu nhờ Regularization, nhưng vẫn không bắt được các mối quan hệ phi tuyến tính. |
+| 8 | Linear Regression | 0.2180 | 0.9344 | Mô hình cơ sở (Baseline). Hiệu suất thấp hơn nhóm cây quyết định, cho thấy dữ liệu có tính phi tuyến cao. |
+| 9 | Lasso Regression | 0.2884 | 0.8852 | **Kém nhất.** Việc triệt tiêu các biến (Feature Selection mạnh tay) dường như đã làm mất đi nhiều thông tin quan trọng, dẫn đến underfitting. |
 
 *(Lưu ý: RMSE được tính trên biến mục tiêu `annual_medical_cost` đã qua xử lý Log-transform)*
 
 
 
 ### 3. Phân tích kết quả
-* **Chiến thắng của Tree-based Models:** Random Forest và XGBoost vượt trội vì dữ liệu y tế chứa nhiều ngưỡng (thresholds) và tương tác phi tuyến. Ví dụ: BMI chỉ thực sự làm tăng vọt chi phí khi vượt qua mức 30 (béo phì) và đi kèm với việc hút thuốc. Linear Regression khó học được điều này nếu không tạo biến tương tác thủ công.
+* **Chiến thắng của Tree-based Models:** Random Forest , LightGBM, XGBoost vượt trội vì dữ liệu y tế chứa nhiều ngưỡng (thresholds) và tương tác phi tuyến. Ví dụ: BMI chỉ thực sự làm tăng vọt chi phí khi vượt qua mức 30 (béo phì) và đi kèm với việc hút thuốc. Linear Regression khó học được điều này nếu không tạo biến tương tác thủ công.
 * **Độ ổn định:** Random Forest cho thấy độ biến thiên thấp (Low Variance) khi kiểm thử chéo (Cross-validation), chứng tỏ mô hình ít bị Overfitting.
 
 
 
 | Metric | Giá trị (Log Scale) | Ý nghĩa |
 | :--- | :--- | :--- |
-| **RMSE** | \~0.1644 | Sai số trung bình phương căn (Root Mean Squared Error) |
-| **MAE** | \~0.1303 | Sai số tuyệt đối trung bình |
-| **R²** | \~0.9627 | Mức độ giải thích độ biến thiên dữ liệu |
-| **MAPE**| \~0.0173 | Sai số phần trăm trung bình|
+| **RMSE** | \~0.1624 | Sai số trung bình phương căn (Root Mean Squared Error) |
+| **MAE** | \~0.1291 | Sai số tuyệt đối trung bình |
+| **R²** | \~0.9636 | Mức độ giải thích độ biến thiên dữ liệu |
+| **MAPE**| \~0.0171 | Sai số phần trăm trung bình|
 
 -----
 
@@ -315,7 +340,8 @@ Dù mô hình hiện tại đã đạt kết quả tốt (RMSE ~0.16), dự án 
 
 ## 👥 Tác giả
 
-  * **Họ và tên:** Nguyễn Hữu Phước, Nguyễn Chí Tiến
+  * **Họ và tên:** Nguyễn Hữu Phước, MSSV: 23280078
+  * **Họ và tên:** Nguyễn Chí Tiến, MSSV: 23280087
  
 
 -----
